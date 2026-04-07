@@ -1,73 +1,51 @@
-# React + TypeScript + Vite
+# Deutschland 2030
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Manifest for the Future** — What if we took the best from 12 countries and built one?
 
-Currently, two official plugins are available:
+A digital platform that makes politics understandable, simulates citizen reactions, and proposes evidence-based reforms. Designed for schools, students, citizens, and politicians.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What It Does
 
-## React Compiler
+- **9 Reform Areas** — Energy, Pensions, Social Welfare, Tax, Service, Nutrition, Health, Animal Welfare, Education
+- **Policy Simulator** — Pick a policy, see how 24 personas (representing 96% of Germany) react. Weighted approval scores.
+- **7 Democracy Innovations** — Ideas that don't exist anywhere: GitLaw, Constituency Dashboard, Generational Scoring, AI Deliberation, Lobbying Tracing, PolicyEngine+AI, Permanent Sortition Chamber
+- **Voter Satisfaction Simulation** — 8 detailed voter profiles (24% → 66% average satisfaction after reforms)
+- **Path to 80%** — Based on World Happiness Report, OECD Trust Survey, Tyler's procedural justice, Rothstein's Quality of Government
+- **Party Check** — How much can each party agree? Simulated approval with key compromises
+- **Cost/Benefit Math** — €23B investment → €91B savings = +€68B net (€820 per citizen per year)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 12 Countries as Role Models
 
-## Expanding the ESLint configuration
+Japan (nutrition education, health checks), Finland (free school meals, North Karelia -82% CVD deaths), Taiwan (single-payer healthcare at 6.6% GDP), Estonia (digital government in 3 minutes), Switzerland (direct democracy), Denmark (flexicurity, 92% satisfaction), Portugal (mandatory vegan option in all public canteens), Singapore (prevention-first, 4.1% GDP healthcare), Cuba (community doctors), UK (sugar tax), Iceland (4-day work week), Sweden (AP7 pension fund, parental leave).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## The Vision
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+> "Every element already exists — somewhere in the world. We just need to put it together."
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**6 Principles:**
+1. Prevention over repair
+2. Education over punishment
+3. Nutrition over medication
+4. Dignity for all living beings
+5. One system for everyone
+6. The best from around the world
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Run Locally
+
+```bash
+npm install
+npm run dev     # http://localhost:5173
+npm run build   # Production build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Tech Stack
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+React 19 + TypeScript + Vite 8 + Tailwind CSS v4 + Lucide icons.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Data Sources
+
+OECD, WHO, Eurobarometer, World Happiness Report, Destatis, Bundestag, DIW, IW Köln, SINUS-Institut, BAMF, Bundesagentur für Arbeit.
+
+## License
+
+Open source. Built with conviction.
