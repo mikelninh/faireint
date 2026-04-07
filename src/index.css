@@ -2,103 +2,59 @@
 
 @theme {
   --color-bg: #FAFAF7;
-  --color-bg-warm: #F5F3EE;
+  --color-bg-alt: #F3F1EC;
   --color-bg-card: #FFFFFF;
-  --color-ink: #1B1B2F;
-  --color-ink-soft: #4A4A5A;
-  --color-ink-muted: #8A8A9A;
-  --color-border: #E8E6E1;
-  --color-border-hover: #D4D0C8;
-  --color-gold: #B8860B;
-  --color-gold-soft: #D4A84B;
-  --color-gold-bg: #FBF7ED;
-  --color-sage: #2D7A4F;
-  --color-sage-soft: #4CA870;
-  --color-sage-bg: #EFF8F2;
-  --color-coral: #C4533A;
-  --color-coral-soft: #E07A5F;
-  --color-coral-bg: #FDF2EF;
-  --color-blue: #3B7CB8;
-  --color-blue-soft: #5B9AD5;
-  --color-blue-bg: #EEF4FA;
-  --color-violet: #7C5CBF;
-  --color-violet-bg: #F4F0FA;
-  --color-dark: #1B1B2F;
-  --color-dark-soft: #2A2A40;
-  --font-display: 'Georgia', 'Times New Roman', serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --color-ink: #1A1A1A;
+  --color-ink-soft: #444444;
+  --color-ink-muted: #777777;
+  --color-border: #E5E3DE;
+  --color-gold: #C08B20;
+  --color-gold-light: #F5ECD7;
+  --color-green: #1B7A40;
+  --color-green-light: #E6F4EC;
+  --color-red: #C44030;
+  --color-red-light: #FCEAE8;
+  --color-blue: #2870B0;
+  --color-blue-light: #E8F0F8;
+  --color-purple: #6B46A0;
+  --color-purple-light: #F0EBF6;
+  --color-dark: #1A1A1A;
+  --font-display: 'Georgia', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
     font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.7;
     color: var(--color-ink);
     background: var(--color-bg);
     -webkit-font-smoothing: antialiased;
   }
   body { margin: 0; }
-  ::selection { background: var(--color-gold-soft); color: white; }
+  ::selection { background: var(--color-gold); color: white; }
 }
 
 @layer utilities {
-  /* Entrance animations */
-  .animate-in {
-    animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    opacity: 0;
+  .fade-in { animation: fadeIn 0.8s ease forwards; opacity: 0; }
+  .fade-in-delay { animation: fadeIn 0.8s 0.2s ease forwards; opacity: 0; }
+  @keyframes fadeIn {
+    to { opacity: 1; }
   }
-  .delay-1 { animation-delay: 0.1s; }
-  .delay-2 { animation-delay: 0.2s; }
-  .delay-3 { animation-delay: 0.3s; }
-  .delay-4 { animation-delay: 0.4s; }
-  .delay-5 { animation-delay: 0.5s; }
-
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
+  .bar-animate {
+    animation: barGrow 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transform-origin: left;
   }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
-  .float { animation: float 6s ease-in-out infinite; }
-  .float-delay { animation: float 6s ease-in-out 2s infinite; }
-
-  @keyframes grow {
+  @keyframes barGrow {
     from { transform: scaleX(0); }
     to { transform: scaleX(1); }
   }
-  .bar-grow { animation: grow 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; transform-origin: left; }
-
-  /* Gradient text */
-  .text-gradient {
-    background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-coral-soft) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Subtle card hover */
-  .card-hover {
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-  }
-
-  /* Soft glow */
-  .glow-warm {
-    background: radial-gradient(ellipse at 50% 0%, rgba(212,168,75,0.08) 0%, transparent 70%);
-  }
-  .glow-sage {
-    background: radial-gradient(ellipse at 50% 50%, rgba(45,122,79,0.04) 0%, transparent 70%);
-  }
+  .hover-lift { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-gold-soft); }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
