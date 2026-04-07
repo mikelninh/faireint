@@ -1,215 +1,193 @@
 import { useState } from 'react'
-import { reforms, principles, stats } from './data/manifesto'
+import { reforms, principles } from './data/manifesto'
 import { timeline, costs, partyReactions, generationImpact } from './data/roadmap'
 import { voters, satisfactionSummary } from './data/voters'
 import { deepNeeds, trustPillars, partyPathTo80, internationalCeiling, truthBomb } from './data/path-to-80'
-import { ChevronDown, ChevronUp, Globe, Heart, Users, ArrowRight, CheckCircle, Clock, Target, TrendingUp, Scale, Sparkles, X, MessageCircle, Lightbulb } from 'lucide-react'
+import {
+  ChevronDown, ChevronUp, Heart, Users, ArrowRight, CheckCircle,
+  Clock, Target, TrendingUp, Scale, Sparkles, X, Lightbulb, BookOpen
+} from 'lucide-react'
 import './index.css'
 
-function ProgressBar({ value, max, color = 'bg-sage' }: { value: number; max: number; color?: string }) {
-  const pct = Math.min((value / max) * 100, 100)
+/* ── Reusable Components ────────────────────────────── */
+
+function SectionLabel({ icon: Icon, label }: { icon: React.ElementType; label: string }) {
   return (
-    <div className="w-full bg-parchment-dark rounded-full h-3 overflow-hidden">
-      <div className={`h-full rounded-full transition-all duration-1000 ${color}`} style={{ width: `${pct}%` }} />
+    <div className="flex items-center justify-center gap-2 mb-3">
+      <Icon className="w-4 h-4 text-gold" />
+      <p className="text-gold uppercase tracking-[0.25em] text-[11px] font-semibold">{label}</p>
     </div>
   )
 }
 
-function CostCard({ item }: { item: typeof costs[0] }) {
-  const roi = item.annualSaving / item.annualCost
+function SectionTitle({ children, sub }: { children: React.ReactNode; sub?: string }) {
   return (
-    <div className="bg-white rounded-2xl p-6 border border-parchment-dark">
-      <h4 className="font-serif text-lg mb-4">{item.reform}</h4>
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="bg-accent/5 rounded-xl p-4 text-center">
-          <p className="text-xs uppercase tracking-wider text-accent/60 mb-1">Kosten/Jahr</p>
-          <p className="text-2xl font-serif text-accent">€{item.annualCost} Mrd.</p>
-        </div>
-        <div className="bg-sage/10 rounded-xl p-4 text-center">
-          <p className="text-xs uppercase tracking-wider text-sage/60 mb-1">Ersparnis/Jahr</p>
-          <p className="text-2xl font-serif text-sage">€{item.annualSaving} Mrd.</p>
-        </div>
-      </div>
-      <div className="flex items-center justify-between bg-gold/5 rounded-xl px-4 py-3 mb-4">
-        <span className="text-sm text-ink-light">Return on Investment</span>
-        <span className="font-serif text-xl text-gold">1:{roi.toFixed(0)}</span>
-      </div>
-      <div className="space-y-2">
-        <p className="text-xs uppercase tracking-wider text-ink-light/40 mb-1">Wohin fließt das Geld?</p>
-        {item.costItems.map((c, i) => (
-          <div key={i} className="flex justify-between text-sm">
-            <span className="text-ink-light/70">{c.label}</span>
-            <span className="text-accent font-medium">€{c.amount} Mrd.</span>
-          </div>
-        ))}
-        <p className="text-xs uppercase tracking-wider text-ink-light/40 mt-3 mb-1">Was wir zurückbekommen</p>
-        {item.savingItems.map((s, i) => (
-          <div key={i} className="flex justify-between text-sm">
-            <span className="text-ink-light/70">{s.label}</span>
-            <span className="text-sage font-medium">€{s.amount} Mrd.</span>
-          </div>
-        ))}
-      </div>
+    <div className="text-center mb-12">
+      <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl leading-tight mb-3">{children}</h2>
+      {sub && <p className="text-sm sm:text-base opacity-50 max-w-xl mx-auto">{sub}</p>}
     </div>
   )
 }
 
-function App() {
+function Bar({ value, max, color = 'bg-sage', height = 'h-2.5' }: { value: number; max: number; color?: string; height?: string }) {
+  return (
+    <div className={`w-full bg-white/10 rounded-full ${height} overflow-hidden`}>
+      <div className={`${height} rounded-full count-bar ${color}`} style={{ width: `${Math.min(value / max * 100, 100)}%` }} />
+    </div>
+  )
+}
+
+function Chip({ children, color = 'bg-gold/10 text-gold' }: { children: React.ReactNode; color?: string }) {
+  return <span className={`text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full ${color}`}>{children}</span>
+}
+
+/* ── App ────────────────────────────────────────────── */
+
+export default function App() {
   const [expandedReform, setExpandedReform] = useState<string | null>(null)
   const [expandedVoter, setExpandedVoter] = useState<string | null>(null)
-  const [activeNav, setActiveNav] = useState('')
-
-  const navItems = [
-    { id: 'prinzipien', label: 'Prinzipien' },
-    { id: 'roadmap', label: 'Fahrplan' },
-    { id: 'reformen', label: 'Reformen' },
-    { id: 'rechnung', label: 'Rechnung' },
-    { id: 'parteien', label: 'Parteien' },
-    { id: 'waehler', label: 'Wähler' },
-    { id: 'weg-zu-80', label: '→ 80%' },
-    { id: 'generationen', label: 'Für dich' },
-  ]
 
   return (
-    <div className="min-h-screen">
-      {/* Sticky Nav */}
-      <nav className="sticky top-0 z-50 bg-ink/95 backdrop-blur-sm border-b border-white/5">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-2">
-          <a href="#" className="font-serif text-gold text-lg">DE 2030</a>
-          <div className="hidden sm:flex gap-1">
-            {navItems.map(n => (
-              <a key={n.id} href={`#${n.id}`} onClick={() => setActiveNav(n.id)}
-                className={`px-3 py-1.5 rounded-full text-xs transition-colors ${activeNav === n.id ? 'bg-gold/20 text-gold' : 'text-white/50 hover:text-white/80'}`}>
-                {n.label}
+    <div className="min-h-screen text-[15px] leading-relaxed">
+
+      {/* ━━ NAV ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <nav className="fixed top-0 w-full z-50 bg-ink/80 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-5 h-12">
+          <a href="#" className="font-serif text-gold text-base tracking-wide">DE 2030</a>
+          <div className="hidden md:flex gap-0.5">
+            {[
+              ['problem','Problem'],['vision','Vision'],['reformen','Reformen'],['rechnung','Zahlen'],
+              ['waehler','Menschen'],['weg-zu-80','→ 80%'],['parteien','Parteien'],['generationen','Für dich']
+            ].map(([id, label]) => (
+              <a key={id} href={`#${id}`}
+                className="px-3 py-1 rounded-full text-[11px] text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
+                {label}
               </a>
             ))}
           </div>
         </div>
       </nav>
 
-      {/* Hero */}
-      <header className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 text-center bg-gradient-to-b from-ink to-ink-light overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-gold blur-[120px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-sage blur-[100px]" />
+      {/* ━━ HERO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <header className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center overflow-hidden bg-ink">
+        {/* Background orbs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-gold/20 blur-[150px] glow-orb" />
+          <div className="absolute bottom-1/4 right-1/5 w-[400px] h-[400px] rounded-full bg-sage/15 blur-[130px] glow-orb" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/2 right-1/3 w-[300px] h-[300px] rounded-full bg-sky/10 blur-[120px] glow-orb" style={{ animationDelay: '3s' }} />
         </div>
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <p className="text-gold uppercase tracking-[0.3em] text-sm mb-6 font-medium">Manifest</p>
-          <h1 className="font-serif text-5xl sm:text-7xl lg:text-8xl text-white leading-[1.1] mb-6">
+
+        <div className="relative z-10 max-w-3xl mx-auto fade-up">
+          <p className="text-gold/80 uppercase tracking-[0.4em] text-[11px] mb-8 font-semibold">Manifest für die Zukunft</p>
+          <h1 className="font-serif text-6xl sm:text-7xl lg:text-[96px] text-white leading-[1.05] mb-6 tracking-tight">
             Deutschland<br /><span className="text-gold">2030</span>
           </h1>
-          <p className="text-xl sm:text-2xl text-white/70 max-w-2xl mx-auto leading-relaxed mb-3">
-            Das Beste aus 12 Ländern. 9 Reformen. Eine Vision.
-          </p>
-          <p className="text-lg text-white/40 max-w-xl mx-auto mb-12">
-            Investiere in Menschen, nicht in Reparaturen.
+          <p className="text-lg sm:text-xl text-white/50 max-w-lg mx-auto mb-16 leading-relaxed">
+            Was wäre, wenn wir das Beste aus 12 Ländern nehmen — und daraus ein Land bauen?
           </p>
 
-          {/* Big number */}
-          <div className="bg-white/5 backdrop-blur rounded-2xl p-8 max-w-lg mx-auto mb-12 border border-white/10">
-            <p className="text-white/40 text-sm uppercase tracking-wider mb-2">Gesamtrechnung aller 9 Reformen</p>
-            <div className="grid grid-cols-2 gap-6">
+          {/* The one stat that matters */}
+          <div className="fade-up fade-up-delay-2 bg-white/[0.03] backdrop-blur rounded-2xl p-8 border border-white/[0.06] max-w-md mx-auto mb-16">
+            <p className="text-white/30 text-[11px] uppercase tracking-widest mb-4">Zufriedenheit mit der Demokratie</p>
+            <div className="flex items-end justify-center gap-8 mb-4">
               <div>
-                <p className="text-3xl font-serif text-accent-light">€23 Mrd.</p>
-                <p className="text-white/40 text-xs mt-1">Jährliche Investition</p>
+                <p className="text-5xl font-serif text-accent">53%</p>
+                <p className="text-white/30 text-xs mt-1">Deutschland heute</p>
               </div>
+              <ArrowRight className="w-5 h-5 text-white/20 mb-3" />
               <div>
-                <p className="text-3xl font-serif text-sage-light">€91 Mrd.</p>
-                <p className="text-white/40 text-xs mt-1">Jährliche Ersparnis</p>
+                <p className="text-5xl font-serif text-sage-light">80%+</p>
+                <p className="text-white/30 text-xs mt-1">Unser Ziel</p>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-white/10">
-              <p className="text-gold text-sm">Jeder investierte Euro bringt 4 Euro zurück</p>
-            </div>
+            <p className="text-white/25 text-xs">Dänemark: 92%. Irland: 83%. Es ist möglich.</p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-12">
-            {stats.map(s => (
-              <div key={s.label} className="text-center">
-                <div className="text-3xl font-serif text-gold mb-1">{s.value}</div>
-                <div className="text-xs text-white/40 uppercase tracking-wider">{s.label}</div>
-              </div>
-            ))}
-          </div>
-          <a href="#prinzipien" className="inline-flex items-center gap-2 text-gold hover:text-gold-light transition-colors">
-            <span>So funktioniert's</span>
+          <a href="#problem" className="inline-flex flex-col items-center gap-1 text-white/30 hover:text-gold transition-colors">
+            <span className="text-[11px] uppercase tracking-widest">Scroll</span>
             <ChevronDown className="w-5 h-5 animate-bounce" />
           </a>
         </div>
       </header>
 
-      {/* Principles */}
-      <section id="prinzipien" className="py-24 px-6 bg-parchment">
+      {/* ━━ THE PROBLEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="problem" className="py-20 sm:py-28 px-6 bg-ink-light">
+        <div className="max-w-4xl mx-auto text-center">
+          <SectionLabel icon={Target} label="Das Problem" />
+          <h2 className="font-serif text-3xl sm:text-5xl text-white leading-tight mb-8">
+            Deutschland funktioniert —<br />aber es <span className="text-accent">fühlt</span> sich nicht so an.
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-4 mb-12">
+            {[
+              { stat: '64%', label: 'DB-Pünktlichkeit', sub: '(Japan: 99%)' },
+              { stat: '€2,43', label: 'Diesel/Liter', sub: '(Allzeithoch)' },
+              { stat: '3%', label: 'für Prävention', sub: '(97% für Reparatur)' },
+            ].map((s, i) => (
+              <div key={i} className="bg-white/[0.03] rounded-xl p-6 border border-white/[0.05]">
+                <p className="text-3xl font-serif text-accent-light mb-1">{s.stat}</p>
+                <p className="text-white/50 text-sm">{s.label}</p>
+                <p className="text-white/25 text-xs">{s.sub}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-white/40 text-sm max-w-lg mx-auto leading-relaxed">
+            Es geht nicht nur um Geld. Es geht darum, ob der Staat dich respektiert.
+            Ob du gehört wirst. Ob du dich sicher fühlst. Ob du frei bist.<br />
+            <span className="text-white/60">Die Forschung zeigt: das kann man ändern.</span>
+          </p>
+        </div>
+      </section>
+
+      {/* ━━ THE VISION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="vision" className="py-20 sm:py-28 px-6 bg-parchment">
         <div className="max-w-5xl mx-auto">
-          <p className="text-gold uppercase tracking-[0.2em] text-sm mb-4 text-center">Woran wir glauben</p>
-          <h2 className="font-serif text-4xl sm:text-5xl text-center mb-4">6 Prinzipien</h2>
-          <p className="text-center text-ink-light/60 mb-16 max-w-xl mx-auto">Keine Partei. Keine Ideologie. Nur das, was nachweislich funktioniert.</p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <SectionLabel icon={Sparkles} label="Die Vision" />
+          <SectionTitle sub="Keine Partei. Keine Ideologie. Nur das, was nachweislich funktioniert — irgendwo auf der Welt.">
+            6 Prinzipien
+          </SectionTitle>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {principles.map((p, i) => (
-              <div key={i} className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-parchment-dark">
-                <div className="text-3xl mb-4 text-gold font-serif">{String(i + 1).padStart(2, '0')}</div>
-                <h3 className="font-serif text-xl text-ink mb-3">{p.title}</h3>
-                <p className="text-ink-light/70 leading-relaxed text-[15px]">{p.description}</p>
+              <div key={i} className="group bg-white rounded-2xl p-7 border border-parchment-dark hover:border-gold/30 hover:shadow-lg transition-all duration-300">
+                <span className="text-2xl font-serif text-gold/40 group-hover:text-gold transition-colors">{String(i + 1).padStart(2, '0')}</span>
+                <h3 className="font-serif text-lg mt-3 mb-2">{p.title}</h3>
+                <p className="text-ink-light/60 text-[14px] leading-relaxed">{p.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Roadmap / Timeline */}
-      <section id="roadmap" className="py-24 px-6 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Clock className="w-5 h-5 text-gold" />
-            <p className="text-gold uppercase tracking-[0.2em] text-sm">Der Fahrplan</p>
-          </div>
-          <h2 className="font-serif text-4xl sm:text-5xl text-center mb-4">Von jetzt bis 2035</h2>
-          <p className="text-center text-ink-light/60 mb-16 max-w-xl mx-auto">Konkrete Schritte. Welche Gesetze wann. Was du wann spürst.</p>
-
+      {/* ━━ ROADMAP ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="roadmap" className="py-20 sm:py-28 px-6 bg-ink text-white">
+        <div className="max-w-3xl mx-auto">
+          <SectionLabel icon={Clock} label="Der Fahrplan" />
+          <SectionTitle sub="Konkrete Gesetze. Konkrete Fristen. Was du wann spürst.">
+            <span className="text-white">Von heute bis 2035</span>
+          </SectionTitle>
           <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-parchment-dark hidden sm:block" />
-
-            <div className="space-y-8">
+            <div className="absolute left-[18px] top-4 bottom-4 w-px bg-white/10" />
+            <div className="space-y-6">
               {timeline.map((step, i) => {
-                const statusColors = {
-                  now: 'bg-accent text-white',
-                  soon: 'bg-gold text-ink',
-                  mid: 'bg-sage text-white',
-                  future: 'bg-sky text-white',
-                }
-                const statusLabels = {
-                  now: 'Jetzt',
-                  soon: 'Bald',
-                  mid: '2028-29',
-                  future: 'Zukunft',
-                }
+                const dotColor = step.status === 'now' ? 'bg-accent' : step.status === 'soon' ? 'bg-gold' : step.status === 'mid' ? 'bg-sage' : 'bg-sky'
                 return (
-                  <div key={i} className="relative sm:pl-16">
-                    {/* Dot */}
-                    <div className={`hidden sm:flex absolute left-4 top-6 w-4 h-4 rounded-full border-4 border-white ${step.status === 'now' ? 'bg-accent' : step.status === 'soon' ? 'bg-gold' : step.status === 'mid' ? 'bg-sage' : 'bg-sky'}`} />
-
-                    <div className="bg-parchment/50 rounded-2xl p-6 border border-parchment-dark hover:border-gold/30 transition-colors">
-                      <div className="flex flex-wrap items-center gap-3 mb-3">
-                        <span className="font-serif text-2xl text-ink">{step.year}</span>
-                        {step.quarter && <span className="text-ink-light/40 text-sm">{step.quarter}</span>}
-                        <span className={`text-xs px-2 py-0.5 rounded-full ${statusColors[step.status]}`}>
-                          {statusLabels[step.status]}
-                        </span>
+                  <div key={i} className="relative pl-12">
+                    <div className={`absolute left-2.5 top-1.5 w-3 h-3 rounded-full ${dotColor} ring-4 ring-ink`} />
+                    <div className="bg-white/[0.03] rounded-xl p-5 border border-white/[0.05] hover:border-white/[0.1] transition-colors">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="font-serif text-xl text-white/90">{step.year}</span>
+                        {step.quarter && <span className="text-white/30 text-xs">{step.quarter}</span>}
+                        <Chip color={step.status === 'now' ? 'bg-accent/20 text-accent-light' : step.status === 'soon' ? 'bg-gold/20 text-gold' : step.status === 'mid' ? 'bg-sage/20 text-sage-light' : 'bg-sky/20 text-sky-light'}>
+                          {step.status === 'now' ? 'Jetzt' : step.status === 'soon' ? 'Bald' : step.status === 'mid' ? '2028-29' : 'Zukunft'}
+                        </Chip>
                       </div>
-                      <h3 className="font-serif text-xl text-ink mb-2">{step.title}</h3>
-                      <p className="text-ink-light/60 text-sm mb-4">{step.description}</p>
-                      {step.laws && (
-                        <div className="space-y-2">
-                          <p className="text-xs uppercase tracking-wider text-ink-light/30 mb-1">Gesetze & Maßnahmen</p>
-                          {step.laws.map((law, j) => (
-                            <div key={j} className="flex items-start gap-2">
-                              <CheckCircle className="w-4 h-4 text-sage mt-0.5 shrink-0" />
-                              <span className="text-sm text-ink-light/70">{law}</span>
-                            </div>
-                          ))}
+                      <h3 className="font-serif text-base text-white/80 mb-1">{step.title}</h3>
+                      <p className="text-white/35 text-xs mb-3">{step.description}</p>
+                      {step.laws?.map((law, j) => (
+                        <div key={j} className="flex items-start gap-2 mb-1">
+                          <CheckCircle className="w-3 h-3 text-sage/60 mt-0.5 shrink-0" />
+                          <span className="text-xs text-white/50">{law}</span>
                         </div>
-                      )}
+                      ))}
                     </div>
                   </div>
                 )
@@ -219,85 +197,64 @@ function App() {
         </div>
       </section>
 
-      {/* Reforms (accordion) */}
-      <section id="reformen" className="py-24 px-6 bg-parchment">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Target className="w-5 h-5 text-gold" />
-            <p className="text-gold uppercase tracking-[0.2em] text-sm">Die Reformen</p>
-          </div>
-          <h2 className="font-serif text-4xl sm:text-5xl text-center mb-4">9 Bereiche, die alles ändern</h2>
-          <p className="text-center text-ink-light/60 mb-16 max-w-2xl mx-auto">
-            Klick auf einen Bereich — sieh das Problem, die Lösung, wer es besser macht, und eine echte Geschichte.
-          </p>
-
-          <div className="space-y-3">
+      {/* ━━ REFORMS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="reformen" className="py-20 sm:py-28 px-6 bg-parchment">
+        <div className="max-w-3xl mx-auto">
+          <SectionLabel icon={BookOpen} label="Die Reformen" />
+          <SectionTitle sub="9 Bereiche. Klick auf einen — sieh Problem, Lösung, Vorbild, und eine echte Geschichte.">
+            Was sich konkret ändert
+          </SectionTitle>
+          <div className="space-y-2">
             {reforms.map(reform => {
-              const isExpanded = expandedReform === reform.id
+              const open = expandedReform === reform.id
               return (
-                <div key={reform.id} className="border border-parchment-dark rounded-2xl overflow-hidden bg-white hover:border-gold/20 transition-colors">
-                  <button
-                    onClick={() => setExpandedReform(isExpanded ? null : reform.id)}
-                    className="w-full flex items-center justify-between p-5 text-left cursor-pointer"
-                  >
+                <div key={reform.id} className={`rounded-2xl overflow-hidden transition-all duration-300 ${open ? 'bg-white shadow-lg border border-gold/20' : 'bg-white border border-parchment-dark hover:border-gold/10'}`}>
+                  <button onClick={() => setExpandedReform(open ? null : reform.id)}
+                    className="w-full flex items-center justify-between p-5 text-left cursor-pointer">
                     <div className="flex items-center gap-4">
                       <span className="text-2xl">{reform.emoji}</span>
                       <div>
-                        <h3 className="font-serif text-lg text-ink">{reform.title}</h3>
-                        <p className="text-xs text-ink-light/50">{reform.subtitle}</p>
+                        <h3 className="font-serif text-base">{reform.title}</h3>
+                        <p className="text-[12px] text-ink-light/40">{reform.subtitle}</p>
                       </div>
                     </div>
-                    {isExpanded ? <ChevronUp className="w-5 h-5 text-gold" /> : <ChevronDown className="w-5 h-5 text-ink-light/30" />}
+                    {open ? <ChevronUp className="w-4 h-4 text-gold" /> : <ChevronDown className="w-4 h-4 text-ink-light/20" />}
                   </button>
-
-                  {isExpanded && (
-                    <div className="px-5 pb-6 space-y-6">
-                      <div className="bg-accent/5 rounded-xl p-5 border border-accent/10">
-                        <p className="text-xs uppercase tracking-wider text-accent/70 mb-2 font-medium">Das Problem</p>
-                        <p className="text-ink-light leading-relaxed text-[15px]">{reform.problem}</p>
+                  {open && (
+                    <div className="px-5 pb-6 space-y-5">
+                      <div className="bg-accent/[0.04] rounded-xl p-4">
+                        <Chip color="bg-accent/10 text-accent">Problem</Chip>
+                        <p className="text-ink-light/70 text-[14px] mt-2 leading-relaxed">{reform.problem}</p>
                       </div>
-
                       <div>
-                        <p className="text-xs uppercase tracking-wider text-sage/70 mb-3 font-medium">Die Lösung</p>
-                        <ul className="space-y-2">
+                        <Chip color="bg-sage/10 text-sage">Lösung</Chip>
+                        <ul className="mt-2 space-y-1.5">
                           {reform.solution.map((s, i) => (
-                            <li key={i} className="flex items-start gap-3">
-                              <ArrowRight className="w-4 h-4 text-sage mt-0.5 shrink-0" />
-                              <span className="text-ink-light leading-relaxed text-[15px]">{s}</span>
+                            <li key={i} className="flex items-start gap-2 text-[14px] text-ink-light/70">
+                              <ArrowRight className="w-3.5 h-3.5 text-sage mt-0.5 shrink-0" />{s}
                             </li>
                           ))}
                         </ul>
                       </div>
-
-                      <div>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Globe className="w-4 h-4 text-sky" />
-                          <p className="text-xs uppercase tracking-wider text-sky/70 font-medium">Was andere besser machen</p>
-                        </div>
-                        <div className="grid sm:grid-cols-2 gap-3">
-                          {reform.worldwide.map((w, i) => (
-                            <div key={i} className="bg-sky/5 rounded-xl p-4 border border-sky/10">
-                              <p className="font-medium text-ink text-sm mb-1">{w.flag} {w.country}</p>
-                              <p className="text-[13px] text-ink-light/70 leading-relaxed">{w.lesson}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="bg-gold/5 rounded-xl p-5 border border-gold/10">
-                        <div className="flex items-center gap-2 mb-3">
-                          <Users className="w-4 h-4 text-gold" />
-                          <p className="text-xs uppercase tracking-wider text-gold/70 font-medium">Echte Geschichte</p>
-                        </div>
-                        <p className="font-serif text-lg text-ink mb-3">{reform.story.name}, {reform.story.age} — {reform.story.role}</p>
-                        <div className="grid sm:grid-cols-2 gap-4">
-                          <div className="bg-accent/5 rounded-lg p-3">
-                            <p className="text-xs uppercase tracking-wider text-accent/50 mb-1">Vorher</p>
-                            <p className="text-sm text-ink-light">{reform.story.before}</p>
+                      <div className="grid sm:grid-cols-2 gap-2">
+                        {reform.worldwide.map((w, i) => (
+                          <div key={i} className="bg-sky/[0.04] rounded-xl p-3 border border-sky/10">
+                            <p className="font-medium text-sm">{w.flag} {w.country}</p>
+                            <p className="text-[12px] text-ink-light/60 mt-1">{w.lesson}</p>
                           </div>
-                          <div className="bg-sage/5 rounded-lg p-3">
-                            <p className="text-xs uppercase tracking-wider text-sage/50 mb-1">Nachher</p>
-                            <p className="text-sm text-ink-light">{reform.story.after}</p>
+                        ))}
+                      </div>
+                      <div className="bg-gold/[0.04] rounded-xl p-4 border border-gold/10">
+                        <Chip color="bg-gold/10 text-gold">Echte Geschichte</Chip>
+                        <p className="font-serif text-base mt-2">{reform.story.name}, {reform.story.age} — {reform.story.role}</p>
+                        <div className="grid sm:grid-cols-2 gap-3 mt-3">
+                          <div className="bg-accent/[0.06] rounded-lg p-3">
+                            <p className="text-[10px] uppercase tracking-wider text-accent/50 mb-1">Vorher</p>
+                            <p className="text-[13px] text-ink-light/70">{reform.story.before}</p>
+                          </div>
+                          <div className="bg-sage/[0.06] rounded-lg p-3">
+                            <p className="text-[10px] uppercase tracking-wider text-sage/50 mb-1">Nachher</p>
+                            <p className="text-[13px] text-ink-light/70">{reform.story.after}</p>
                           </div>
                         </div>
                       </div>
@@ -310,603 +267,365 @@ function App() {
         </div>
       </section>
 
-      {/* Cost/Benefit Calculation */}
-      <section id="rechnung" className="py-24 px-6 bg-white">
+      {/* ━━ THE MATH ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="rechnung" className="py-20 sm:py-28 px-6 bg-ink text-white">
         <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <TrendingUp className="w-5 h-5 text-gold" />
-            <p className="text-gold uppercase tracking-[0.2em] text-sm">Die Rechnung</p>
-          </div>
-          <h2 className="font-serif text-4xl sm:text-5xl text-center mb-4">Was kostet's? Was bringt's?</h2>
-          <p className="text-center text-ink-light/60 mb-6 max-w-xl mx-auto">Jede Reform mit konkreten Zahlen. Kosten, Ersparnisse, Return on Investment.</p>
+          <SectionLabel icon={TrendingUp} label="Die Rechnung" />
+          <SectionTitle sub="Jede Reform rechnet sich. Hier ist der Beweis.">
+            <span className="text-white">Was kostet's? Was bringt's?</span>
+          </SectionTitle>
 
-          {/* Summary bar */}
-          <div className="bg-ink rounded-2xl p-6 mb-12 text-center">
+          <div className="bg-white/[0.03] rounded-2xl p-8 border border-white/[0.06] mb-10 text-center">
             <div className="grid grid-cols-3 gap-6">
               <div>
-                <p className="text-white/40 text-xs uppercase tracking-wider mb-1">Gesamtinvestition</p>
-                <p className="text-3xl font-serif text-accent-light">€23 Mrd./Jahr</p>
+                <p className="text-white/30 text-[11px] uppercase tracking-wider mb-1">Investition</p>
+                <p className="text-3xl sm:text-4xl font-serif text-accent-light">€23 Mrd.</p>
               </div>
               <div>
-                <p className="text-white/40 text-xs uppercase tracking-wider mb-1">Gesamtersparnis</p>
-                <p className="text-3xl font-serif text-sage-light">€91 Mrd./Jahr</p>
+                <p className="text-white/30 text-[11px] uppercase tracking-wider mb-1">Ersparnis</p>
+                <p className="text-3xl sm:text-4xl font-serif text-sage-light">€91 Mrd.</p>
               </div>
               <div>
-                <p className="text-white/40 text-xs uppercase tracking-wider mb-1">Netto-Gewinn</p>
-                <p className="text-3xl font-serif text-gold">+€68 Mrd./Jahr</p>
+                <p className="text-white/30 text-[11px] uppercase tracking-wider mb-1">Netto</p>
+                <p className="text-3xl sm:text-4xl font-serif text-gold">+€68 Mrd.</p>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-white/10">
-              <p className="text-white/50 text-sm">Das sind €820 pro Bürger pro Jahr, die wir gewinnen — nicht ausgeben.</p>
-            </div>
+            <p className="text-white/25 text-xs mt-4">= €820 pro Bürger pro Jahr, die wir gewinnen</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {costs.map((c, i) => <CostCard key={i} item={c} />)}
-          </div>
-        </div>
-      </section>
-
-      {/* Party Reactions */}
-      <section id="parteien" className="py-24 px-6 bg-parchment">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Scale className="w-5 h-5 text-gold" />
-            <p className="text-gold uppercase tracking-[0.2em] text-sm">Parteien-Check</p>
-          </div>
-          <h2 className="font-serif text-4xl sm:text-5xl text-center mb-4">Können alle zustimmen?</h2>
-          <p className="text-center text-ink-light/60 mb-6 max-w-2xl mx-auto">Simulierte Reaktion jeder Partei. Wo sie gewinnen. Wo sie Bauchschmerzen haben. Wie viel Zustimmung möglich ist.</p>
-
-          {/* Approval overview */}
-          <div className="bg-white rounded-2xl p-6 border border-parchment-dark mb-8">
-            <p className="text-xs uppercase tracking-wider text-ink-light/40 mb-4">Zustimmungsgrad (simuliert)</p>
-            <div className="space-y-3">
-              {partyReactions.map(p => (
-                <div key={p.party} className="flex items-center gap-4">
-                  <span className="w-20 text-sm font-medium text-ink">{p.party}</span>
-                  <div className="flex-1">
-                    <ProgressBar value={p.approval} max={100} color={p.approval >= 70 ? 'bg-sage' : p.approval >= 50 ? 'bg-gold' : 'bg-accent'} />
-                  </div>
-                  <span className="w-12 text-right text-sm font-serif" style={{ color: p.approval >= 70 ? '#4A7C59' : p.approval >= 50 ? '#C4A265' : '#B85C38' }}>
-                    {p.approval}%
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 pt-4 border-t border-parchment-dark">
-              <p className="text-sm text-ink-light/60">
-                <span className="text-sage font-medium">4 von 6 Parteien</span> über 50% Zustimmung. CDU/CSU + SPD + Grüne + FDP = verfassungsändernde Mehrheit möglich.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {partyReactions.map(p => (
-              <div key={p.party} className="bg-white rounded-2xl p-5 border border-parchment-dark">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-xl">{p.emoji}</span>
-                  <div>
-                    <h4 className="font-serif text-lg">{p.party}</h4>
-                    <span className={`text-xs font-medium ${p.approval >= 70 ? 'text-sage' : p.approval >= 50 ? 'text-gold' : 'text-accent'}`}>
-                      {p.approval}% Zustimmung
-                    </span>
-                  </div>
-                </div>
-                <p className="text-sm text-ink-light/70 italic mb-4">„{p.quote}"</p>
-                <div className="mb-3">
-                  <p className="text-xs uppercase tracking-wider text-sage/60 mb-1">Das bekommen sie</p>
-                  {p.wins.map((w, i) => (
-                    <div key={i} className="flex items-start gap-1.5 mb-1">
-                      <CheckCircle className="w-3 h-3 text-sage mt-0.5 shrink-0" />
-                      <span className="text-xs text-ink-light/70">{w}</span>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-accent/60 mb-1">Bauchschmerzen</p>
-                  {p.concerns.map((c, i) => (
-                    <div key={i} className="flex items-start gap-1.5 mb-1">
-                      <span className="text-xs text-accent mt-0.5 shrink-0">•</span>
-                      <span className="text-xs text-ink-light/70">{c}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Voter Satisfaction Simulation */}
-      <section id="waehler" className="py-24 px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <MessageCircle className="w-5 h-5 text-gold" />
-            <p className="text-gold uppercase tracking-[0.2em] text-sm">Wähler-Simulation</p>
-          </div>
-          <h2 className="font-serif text-4xl sm:text-5xl text-center mb-4">Sind die Menschen zufriedener?</h2>
-          <p className="text-center text-ink-light/60 mb-6 max-w-2xl mx-auto">
-            8 echte Wählerprofile. Was sie sich wünschen. Was sie bekommen. Ob es reicht.
-          </p>
-
-          {/* Overall satisfaction shift */}
-          <div className="bg-ink rounded-2xl p-8 mb-8">
-            <div className="grid grid-cols-2 gap-8 mb-6">
-              <div className="text-center">
-                <p className="text-white/40 text-xs uppercase tracking-wider mb-2">Zufriedenheit JETZT</p>
-                <p className="text-5xl font-serif text-accent-light">{satisfactionSummary.currentAverage}%</p>
-                <p className="text-white/30 text-xs mt-1">Durchschnitt aller 8 Profile</p>
-              </div>
-              <div className="text-center">
-                <p className="text-white/40 text-xs uppercase tracking-wider mb-2">Zufriedenheit NACH Reformen</p>
-                <p className="text-5xl font-serif text-sage-light">{satisfactionSummary.afterAverage}%</p>
-                <p className="text-white/30 text-xs mt-1">+{satisfactionSummary.afterAverage - satisfactionSummary.currentAverage} Punkte</p>
-              </div>
-            </div>
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-white/60 text-sm leading-relaxed">{satisfactionSummary.keyInsight}</p>
-            </div>
-          </div>
-
-          {/* Satisfaction bars overview */}
-          <div className="bg-parchment/50 rounded-2xl p-6 border border-parchment-dark mb-8">
-            <p className="text-xs uppercase tracking-wider text-ink-light/40 mb-4">Vorher → Nachher pro Wählergruppe</p>
-            <div className="space-y-4">
-              {voters.map(v => (
-                <div key={v.id} className="flex items-center gap-3">
-                  <span className="text-xl w-8">{v.emoji}</span>
-                  <span className="w-24 text-sm text-ink-light truncate">{v.name}, {v.age}</span>
-                  <div className="flex-1 flex items-center gap-2">
-                    <div className="flex-1 relative h-6">
-                      {/* Before bar */}
-                      <div className="absolute inset-y-0 left-0 bg-accent/20 rounded-full" style={{ width: `${v.currentSatisfaction}%` }}>
-                        <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[10px] text-accent font-medium">{v.currentSatisfaction}%</span>
-                      </div>
-                      {/* After bar */}
-                      <div className="absolute inset-y-0 left-0 rounded-full border-2 border-sage" style={{ width: `${v.afterSatisfaction}%` }}>
-                        <span className="absolute -right-8 top-1/2 -translate-y-1/2 text-xs text-sage font-serif font-medium">{v.afterSatisfaction}%</span>
-                      </div>
-                    </div>
-                    <span className="text-xs text-sage w-12 text-right">+{v.afterSatisfaction - v.currentSatisfaction}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center gap-4 mt-4 pt-3 border-t border-parchment-dark">
-              <div className="flex items-center gap-2"><div className="w-4 h-3 bg-accent/20 rounded" /><span className="text-xs text-ink-light/50">Jetzt</span></div>
-              <div className="flex items-center gap-2"><div className="w-4 h-3 border-2 border-sage rounded" /><span className="text-xs text-ink-light/50">Nach Reformen</span></div>
-            </div>
-          </div>
-
-          {/* Expandable voter cards */}
-          <div className="space-y-3">
-            {voters.map(voter => {
-              const isExpanded = expandedVoter === voter.id
-              const delta = voter.afterSatisfaction - voter.currentSatisfaction
+          <div className="grid md:grid-cols-2 gap-4">
+            {costs.map((item, i) => {
+              const roi = item.annualSaving / item.annualCost
               return (
-                <div key={voter.id} className="border border-parchment-dark rounded-2xl overflow-hidden bg-parchment/30 hover:border-gold/20 transition-colors">
-                  <button
-                    onClick={() => setExpandedVoter(isExpanded ? null : voter.id)}
-                    className="w-full flex items-center justify-between p-5 text-left cursor-pointer"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="text-3xl">{voter.emoji}</span>
-                      <div>
-                        <h3 className="font-serif text-lg text-ink">{voter.name}, {voter.age} — <span className="text-ink-light/60 font-sans text-sm">{voter.profile}</span></h3>
-                        <div className="flex items-center gap-3 mt-1">
-                          <span className="text-xs text-ink-light/40">{voter.location}</span>
-                          <span className="text-xs text-ink-light/40">•</span>
-                          <span className="text-xs text-ink-light/40">{voter.income}</span>
-                          <span className="text-xs text-ink-light/40">•</span>
-                          <span className="text-xs text-ink-light/40">Letzte Wahl: {voter.votedLast}</span>
-                        </div>
-                      </div>
+                <div key={i} className="bg-white/[0.03] rounded-2xl p-6 border border-white/[0.06]">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-serif text-base text-white/80">{item.reform}</h4>
+                    <Chip>ROI 1:{roi.toFixed(0)}</Chip>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 mb-3">
+                    <div className="text-center bg-accent/10 rounded-lg p-3">
+                      <p className="text-xl font-serif text-accent-light">€{item.annualCost} Mrd.</p>
+                      <p className="text-[10px] text-white/30 uppercase">Kosten</p>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="text-right hidden sm:block">
-                        <span className={`text-sm font-serif ${delta >= 40 ? 'text-sage' : delta >= 20 ? 'text-gold' : 'text-accent'}`}>
-                          +{delta} Punkte
-                        </span>
-                      </div>
-                      {isExpanded ? <ChevronUp className="w-5 h-5 text-gold" /> : <ChevronDown className="w-5 h-5 text-ink-light/30" />}
-                    </div>
-                  </button>
-
-                  {isExpanded && (
-                    <div className="px-5 pb-6 space-y-5">
-                      {/* Satisfaction shift visual */}
-                      <div className="bg-white rounded-xl p-5 border border-parchment-dark">
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-xs uppercase tracking-wider text-ink-light/40">Zufriedenheit</span>
-                          <span className={`text-sm font-serif ${delta >= 40 ? 'text-sage' : delta >= 20 ? 'text-gold' : 'text-accent'}`}>
-                            {voter.currentSatisfaction}% → {voter.afterSatisfaction}%
-                          </span>
-                        </div>
-                        <div className="relative h-8 bg-parchment-dark rounded-full overflow-hidden">
-                          <div className="absolute inset-y-0 left-0 bg-accent/30 rounded-full transition-all" style={{ width: `${voter.currentSatisfaction}%` }} />
-                          <div className={`absolute inset-y-0 left-0 rounded-full transition-all ${voter.afterSatisfaction >= 70 ? 'bg-sage' : voter.afterSatisfaction >= 50 ? 'bg-gold' : 'bg-accent'}`} style={{ width: `${voter.afterSatisfaction}%` }} />
-                        </div>
-                      </div>
-
-                      {/* What worries them */}
-                      <div>
-                        <p className="text-xs uppercase tracking-wider text-accent/70 mb-2 font-medium">Was ihn/sie nachts wachhält</p>
-                        <div className="space-y-1.5">
-                          {voter.topWorries.map((w, i) => (
-                            <p key={i} className="text-sm text-ink-light/70 flex items-start gap-2">
-                              <span className="text-accent shrink-0">•</span>{w}
-                            </p>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* What they get — checklist */}
-                      <div>
-                        <p className="text-xs uppercase tracking-wider text-sage/70 mb-2 font-medium">Was die Reformen liefern</p>
-                        <div className="space-y-2">
-                          {voter.whatTheyGet.map((g, i) => (
-                            <div key={i} className={`flex items-start gap-3 p-2 rounded-lg ${g.delivered ? 'bg-sage/5' : 'bg-accent/5'}`}>
-                              {g.delivered
-                                ? <CheckCircle className="w-4 h-4 text-sage mt-0.5 shrink-0" />
-                                : <X className="w-4 h-4 text-accent/50 mt-0.5 shrink-0" />}
-                              <div className="flex-1">
-                                <span className="text-sm text-ink-light">{g.item}</span>
-                                <span className="text-xs text-ink-light/40 ml-2">— {g.note}</span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Remaining frustration */}
-                      <div className="bg-gold/5 rounded-xl p-4 border border-gold/10">
-                        <p className="text-xs uppercase tracking-wider text-gold/70 mb-2 font-medium">Was noch fehlt / frustriert</p>
-                        <p className="text-sm text-ink-light/70 leading-relaxed">{voter.remainingFrustration}</p>
-                      </div>
-
-                      {/* How to win them */}
-                      <div className="bg-sage/5 rounded-xl p-4 border border-sage/10">
-                        <p className="text-xs uppercase tracking-wider text-sage/70 mb-2 font-medium">So gewinnen wir sie</p>
-                        <p className="text-sm text-ink-light/70 leading-relaxed">{voter.howToWinThem}</p>
-                      </div>
-
-                      {/* Quote */}
-                      <div className="bg-ink rounded-xl p-5">
-                        <p className="text-white/70 text-sm italic leading-relaxed">„{voter.quote}"</p>
-                        <p className="text-white/30 text-xs mt-2">— {voter.name}, {voter.age}, {voter.location}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Can we make everyone happy? */}
-          <div className="mt-12 bg-ink rounded-2xl p-8">
-            <h3 className="font-serif text-2xl text-white mb-4 text-center">Können wir alle glücklich machen?</h3>
-            <p className="text-white/60 text-sm leading-relaxed mb-6">{satisfactionSummary.canWeGetEveryone}</p>
-            <div className="grid sm:grid-cols-3 gap-4">
-              <div className="bg-sage/10 rounded-xl p-4 text-center">
-                <p className="text-3xl font-serif text-sage-light mb-1">6/8</p>
-                <p className="text-white/40 text-xs">Wählergruppen über 60%</p>
-              </div>
-              <div className="bg-gold/10 rounded-xl p-4 text-center">
-                <p className="text-3xl font-serif text-gold mb-1">+42</p>
-                <p className="text-white/40 text-xs">Punkte durchschnittlicher Anstieg</p>
-              </div>
-              <div className="bg-white/5 rounded-xl p-4 text-center">
-                <p className="text-3xl font-serif text-white/70 mb-1">0/8</p>
-                <p className="text-white/40 text-xs">Wählergruppen die verlieren</p>
-              </div>
-            </div>
-            <p className="text-white/40 text-xs mt-6 text-center">Niemand wird schlechter gestellt. Jeder gewinnt etwas. Aber nicht jeder bekommt alles, was er will. Das ist Demokratie.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Path to 80% */}
-      <section id="weg-zu-80" className="py-24 px-6 bg-parchment">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Lightbulb className="w-5 h-5 text-gold" />
-            <p className="text-gold uppercase tracking-[0.2em] text-sm">Der Weg zu 80%</p>
-          </div>
-          <h2 className="font-serif text-4xl sm:text-5xl text-center mb-4">Was wollen Menschen wirklich?</h2>
-          <p className="text-center text-ink-light/60 mb-16 max-w-2xl mx-auto">
-            Nicht Parteiprogramme. Nicht Ideologie. Forschung zeigt: 5 tiefe Bedürfnisse bestimmen, ob Menschen mit ihrem Land zufrieden sind.
-          </p>
-
-          {/* Deep Needs — Maslow for Governance */}
-          <div className="mb-16">
-            <h3 className="font-serif text-2xl text-center mb-8">Die 5 Bedürfnisse — und wo Deutschland steht</h3>
-            <div className="space-y-4">
-              {deepNeeds.map((need, i) => (
-                <div key={i} className="bg-white rounded-2xl p-6 border border-parchment-dark">
-                  <div className="flex items-center gap-4 mb-3">
-                    <span className="text-3xl">{need.emoji}</span>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-serif text-lg">{need.level}. {need.need}</h4>
-                        <span className="text-sm font-serif">
-                          <span className="text-accent">{need.germanyScore}</span>
-                          <span className="text-ink-light/30"> → </span>
-                          <span className="text-sage">{need.targetScore}</span>
-                        </span>
-                      </div>
-                      <p className="text-xs text-ink-light/50">{need.govEquivalent}</p>
+                    <div className="text-center bg-sage/10 rounded-lg p-3">
+                      <p className="text-xl font-serif text-sage-light">€{item.annualSaving} Mrd.</p>
+                      <p className="text-[10px] text-white/30 uppercase">Ersparnis</p>
                     </div>
                   </div>
-                  <div className="relative h-4 bg-parchment-dark rounded-full overflow-hidden mb-2">
-                    <div className="absolute inset-y-0 left-0 bg-accent/30 rounded-full" style={{ width: `${need.germanyScore}%` }} />
-                    <div className="absolute inset-y-0 left-0 bg-sage rounded-full opacity-40" style={{ width: `${need.targetScore}%` }} />
-                    <div className="absolute inset-y-0 left-0 bg-accent rounded-full" style={{ width: `${need.germanyScore}%` }} />
-                  </div>
-                  <p className="text-xs text-ink-light/50 leading-relaxed">{need.gap}</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-center text-ink-light/40 text-xs mt-4">
-              Rot = Deutschland jetzt. Grün (transparent) = Zielwert 2035. Basierend auf World Happiness Report, OECD, Eurobarometer.
-            </p>
-          </div>
-
-          {/* 6 Trust Pillars */}
-          <div className="mb-16">
-            <h3 className="font-serif text-2xl text-center mb-4">6 Hebel die alles verändern</h3>
-            <p className="text-center text-ink-light/60 text-sm mb-8 max-w-xl mx-auto">
-              Was macht Dänemark (92%), Irland (83%) und die Schweiz (78%) anders? Die Forschung ist eindeutig.
-            </p>
-            <div className="space-y-6">
-              {trustPillars.map(pillar => (
-                <div key={pillar.id} className="bg-white rounded-2xl border border-parchment-dark overflow-hidden">
-                  <div className="p-6">
-                    <div className="flex items-start gap-4 mb-4">
-                      <span className="text-3xl">{pillar.emoji}</span>
-                      <div>
-                        <h4 className="font-serif text-xl mb-1">{pillar.title}</h4>
-                        <p className="text-sm text-ink-light/70 italic">{pillar.insight}</p>
-                      </div>
-                    </div>
-
-                    <div className="bg-parchment/50 rounded-xl p-4 mb-4 border border-parchment-dark">
-                      <p className="text-xs uppercase tracking-wider text-ink-light/40 mb-1">Was die Forschung sagt</p>
-                      <p className="text-sm text-ink-light/70 leading-relaxed">{pillar.research}</p>
-                    </div>
-
-                    <div className="grid sm:grid-cols-2 gap-4 mb-4">
-                      <div className="bg-accent/5 rounded-xl p-4">
-                        <p className="text-xs uppercase tracking-wider text-accent/60 mb-1">Deutschland heute</p>
-                        <p className="text-sm text-ink-light/70">{pillar.germanyNow}</p>
-                      </div>
-                      <div className="bg-sage/5 rounded-xl p-4">
-                        <p className="text-xs uppercase tracking-wider text-sage/60 mb-1">Ziel 2035</p>
-                        <p className="text-sm text-ink-light/70">{pillar.target}</p>
-                      </div>
-                    </div>
-
-                    <div className="bg-sky/5 rounded-xl p-4 mb-4 border border-sky/10">
-                      <p className="text-xs uppercase tracking-wider text-sky/60 mb-1">{pillar.roleModel.flag} Vorbild: {pillar.roleModel.country}</p>
-                      <p className="text-sm text-ink-light/70 mb-1">{pillar.roleModel.what}</p>
-                      <p className="text-sm text-sage font-medium">{pillar.roleModel.result}</p>
-                    </div>
-
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-gold/60 mb-2">Konkrete Schritte für Deutschland</p>
-                      {pillar.concreteStep.map((s, i) => (
-                        <div key={i} className="flex items-start gap-2 mb-1.5">
-                          <ArrowRight className="w-3.5 h-3.5 text-gold mt-0.5 shrink-0" />
-                          <span className="text-sm text-ink-light/70">{s}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* International Ceiling Comparison */}
-          <div className="mb-16">
-            <h3 className="font-serif text-2xl text-center mb-8">Die Messlatte: Wo stehen die Besten?</h3>
-            <div className="bg-white rounded-2xl p-6 border border-parchment-dark">
-              <div className="space-y-3">
-                {internationalCeiling.map(c => (
-                  <div key={c.country} className="flex items-center gap-4">
-                    <span className="text-xl w-8">{c.flag}</span>
-                    <span className="w-28 text-sm font-medium">{c.country}</span>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 relative h-6 bg-parchment-dark rounded-full overflow-hidden">
-                          <div
-                            className={`absolute inset-y-0 left-0 rounded-full ${c.country === 'Deutschland' ? 'bg-accent' : 'bg-sage'}`}
-                            style={{ width: `${c.satisfaction}%` }}
-                          />
-                        </div>
-                        <span className={`text-sm font-serif w-10 text-right ${c.country === 'Deutschland' ? 'text-accent' : 'text-sage'}`}>
-                          {c.satisfaction}%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-ink-light/40 mt-4 text-center">Zufriedenheit mit der Demokratie (Eurobarometer 2023)</p>
-            </div>
-          </div>
-
-          {/* Party Path to 80% */}
-          <div className="mb-16">
-            <h3 className="font-serif text-2xl text-center mb-4">Parteien: Der Weg über 80%</h3>
-            <p className="text-center text-ink-light/60 text-sm mb-8 max-w-xl mx-auto">
-              Was jede Partei WIRKLICH will — und welcher Kompromiss sie auf 80%+ bringt.
-            </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              {partyPathTo80.map(p => (
-                <div key={p.party} className="bg-white rounded-2xl p-5 border border-parchment-dark">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-serif text-lg">{p.party}</h4>
-                    <div className="text-right">
-                      <span className="text-sm text-accent">{p.currentApproval}%</span>
-                      <span className="text-ink-light/30 text-sm"> → </span>
-                      <span className={`text-sm font-medium ${p.potentialApproval >= 80 ? 'text-sage' : 'text-gold'}`}>{p.potentialApproval}%</span>
-                    </div>
-                  </div>
-                  <div className="relative h-3 bg-parchment-dark rounded-full overflow-hidden mb-4">
-                    <div className="absolute inset-y-0 left-0 bg-accent/30 rounded-full" style={{ width: `${p.currentApproval}%` }} />
-                    <div className={`absolute inset-y-0 left-0 rounded-full ${p.potentialApproval >= 80 ? 'bg-sage' : 'bg-gold'}`} style={{ width: `${p.potentialApproval}%` }} />
-                  </div>
-                  <p className="text-xs text-ink-light/50 italic mb-3">Will eigentlich: {p.whatTheyReallyWant}</p>
-                  <div className="mb-3">
-                    <p className="text-xs uppercase tracking-wider text-sage/60 mb-1">Was sie über 80% bringt</p>
-                    {p.whatGetsThemTo80.slice(0, 3).map((w, i) => (
-                      <div key={i} className="flex items-start gap-1.5 mb-1">
-                        <CheckCircle className="w-3 h-3 text-sage mt-0.5 shrink-0" />
-                        <span className="text-xs text-ink-light/70">{w}</span>
+                  <div className="space-y-1">
+                    {item.savingItems.slice(0, 2).map((s, j) => (
+                      <div key={j} className="flex justify-between text-xs">
+                        <span className="text-white/40 truncate mr-2">{s.label}</span>
+                        <span className="text-sage-light shrink-0">€{s.amount} Mrd.</span>
                       </div>
                     ))}
                   </div>
-                  <div className="bg-gold/5 rounded-lg p-3 border border-gold/10">
-                    <p className="text-xs uppercase tracking-wider text-gold/60 mb-1">Der entscheidende Kompromiss</p>
-                    <p className="text-xs text-ink-light/70">{p.keyCompromise}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ━━ REAL PEOPLE ━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="waehler" className="py-20 sm:py-28 px-6 bg-parchment">
+        <div className="max-w-4xl mx-auto">
+          <SectionLabel icon={Users} label="Echte Menschen" />
+          <SectionTitle sub="8 Wähler. Was sie sich wünschen. Was sie bekommen. Ob es reicht.">
+            Sind die Menschen zufriedener?
+          </SectionTitle>
+
+          {/* Satisfaction shift */}
+          <div className="bg-ink rounded-2xl p-8 mb-8 text-center">
+            <div className="flex items-end justify-center gap-12 mb-4">
+              <div>
+                <p className="text-4xl font-serif text-accent-light">{satisfactionSummary.currentAverage}%</p>
+                <p className="text-white/30 text-xs mt-1">Jetzt</p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-white/20 mb-2" />
+              <div>
+                <p className="text-4xl font-serif text-sage-light">{satisfactionSummary.afterAverage}%</p>
+                <p className="text-white/30 text-xs mt-1">Nach Reformen</p>
+              </div>
+            </div>
+            <p className="text-white/40 text-xs">Durchschnitt aller 8 Profile · +{satisfactionSummary.afterAverage - satisfactionSummary.currentAverage} Punkte</p>
+          </div>
+
+          {/* Voter bars */}
+          <div className="bg-white rounded-2xl p-6 border border-parchment-dark mb-6">
+            {voters.map(v => (
+              <div key={v.id} className="flex items-center gap-3 py-2">
+                <span className="text-lg w-7">{v.emoji}</span>
+                <span className="w-28 text-xs text-ink-light/60 truncate">{v.name}, {v.age}</span>
+                <div className="flex-1"><Bar value={v.afterSatisfaction} max={100} color={v.afterSatisfaction >= 70 ? 'bg-sage' : v.afterSatisfaction >= 50 ? 'bg-gold' : 'bg-accent'} /></div>
+                <span className="text-xs font-serif w-14 text-right text-sage">+{v.afterSatisfaction - v.currentSatisfaction}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Expandable voter cards */}
+          <div className="space-y-2">
+            {voters.map(voter => {
+              const open = expandedVoter === voter.id
+              return (
+                <div key={voter.id} className={`rounded-2xl overflow-hidden transition-all ${open ? 'bg-white shadow-lg border border-gold/20' : 'bg-white border border-parchment-dark'}`}>
+                  <button onClick={() => setExpandedVoter(open ? null : voter.id)}
+                    className="w-full flex items-center justify-between p-4 text-left cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{voter.emoji}</span>
+                      <div>
+                        <span className="font-serif text-sm">{voter.name}, {voter.age}</span>
+                        <span className="text-ink-light/40 text-xs ml-2">{voter.location} · {voter.votedLast}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-serif text-sage">+{voter.afterSatisfaction - voter.currentSatisfaction}</span>
+                      {open ? <ChevronUp className="w-4 h-4 text-gold" /> : <ChevronDown className="w-4 h-4 text-ink-light/20" />}
+                    </div>
+                  </button>
+                  {open && (
+                    <div className="px-4 pb-5 space-y-4">
+                      <p className="text-xs text-ink-light/50">{voter.profile} · {voter.income}</p>
+                      <div>
+                        <Chip color="bg-accent/10 text-accent">Sorgen</Chip>
+                        <div className="mt-2 space-y-1">
+                          {voter.topWorries.map((w, i) => <p key={i} className="text-xs text-ink-light/60">• {w}</p>)}
+                        </div>
+                      </div>
+                      <div>
+                        <Chip color="bg-sage/10 text-sage">Was die Reformen liefern</Chip>
+                        <div className="mt-2 space-y-1.5">
+                          {voter.whatTheyGet.map((g, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                              {g.delivered ? <CheckCircle className="w-3 h-3 text-sage mt-0.5 shrink-0" /> : <X className="w-3 h-3 text-accent/40 mt-0.5 shrink-0" />}
+                              <span className="text-xs text-ink-light/60">{g.item} <span className="text-ink-light/30">— {g.note}</span></span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="bg-ink rounded-xl p-4">
+                        <p className="text-white/60 text-xs italic">„{voter.quote}"</p>
+                        <p className="text-white/25 text-[10px] mt-1">— {voter.name}, {voter.age}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ━━ PATH TO 80% ━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="weg-zu-80" className="py-20 sm:py-28 px-6 bg-ink text-white">
+        <div className="max-w-4xl mx-auto">
+          <SectionLabel icon={Lightbulb} label="Der Weg zu 80%" />
+          <SectionTitle sub="Was wollen Menschen WIRKLICH? Die Psychologie hinter Zufriedenheit.">
+            <span className="text-white">5 tiefe Bedürfnisse</span>
+          </SectionTitle>
+
+          {/* Deep needs */}
+          <div className="space-y-3 mb-16">
+            {deepNeeds.map((need, i) => (
+              <div key={i} className="bg-white/[0.03] rounded-xl p-5 border border-white/[0.05]">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-2xl">{need.emoji}</span>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-serif text-sm text-white/80">{need.need}</h4>
+                      <span className="text-xs font-serif"><span className="text-accent-light">{need.germanyScore}</span><span className="text-white/20"> → </span><span className="text-sage-light">{need.targetScore}</span></span>
+                    </div>
+                    <p className="text-[11px] text-white/30">{need.govEquivalent}</p>
                   </div>
+                </div>
+                <div className="relative h-2 bg-white/5 rounded-full overflow-hidden mb-2">
+                  <div className="absolute inset-y-0 left-0 bg-sage/20 rounded-full" style={{ width: `${need.targetScore}%` }} />
+                  <div className="absolute inset-y-0 left-0 bg-accent rounded-full" style={{ width: `${need.germanyScore}%` }} />
+                </div>
+                <p className="text-[11px] text-white/25">{need.gap}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* 6 Trust Pillars */}
+          <SectionTitle sub="Was die zufriedensten Demokratien anders machen — und wie Deutschland es kopieren kann.">
+            <span className="text-white">6 Hebel für Vertrauen</span>
+          </SectionTitle>
+          <div className="space-y-4 mb-16">
+            {trustPillars.map(pillar => (
+              <div key={pillar.id} className="bg-white/[0.03] rounded-2xl p-6 border border-white/[0.05]">
+                <div className="flex items-start gap-3 mb-4">
+                  <span className="text-2xl">{pillar.emoji}</span>
+                  <div>
+                    <h4 className="font-serif text-base text-white/90">{pillar.title}</h4>
+                    <p className="text-xs text-white/40 italic mt-1">{pillar.insight}</p>
+                  </div>
+                </div>
+                <div className="bg-white/[0.02] rounded-xl p-4 mb-3 border border-white/[0.04]">
+                  <p className="text-[11px] text-white/30 uppercase tracking-wider mb-1">Forschung</p>
+                  <p className="text-xs text-white/50 leading-relaxed">{pillar.research}</p>
+                </div>
+                <div className="bg-sky/[0.06] rounded-xl p-4 mb-3 border border-sky/10">
+                  <p className="text-[11px] text-sky-light/70 uppercase tracking-wider mb-1">{pillar.roleModel.flag} {pillar.roleModel.country}</p>
+                  <p className="text-xs text-white/50 mb-1">{pillar.roleModel.what}</p>
+                  <p className="text-xs text-sage-light">{pillar.roleModel.result}</p>
+                </div>
+                <div className="space-y-1">
+                  {pillar.concreteStep.map((s, i) => (
+                    <div key={i} className="flex items-start gap-2">
+                      <ArrowRight className="w-3 h-3 text-gold/60 mt-0.5 shrink-0" />
+                      <span className="text-xs text-white/45">{s}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* International ceiling */}
+          <div className="bg-white/[0.03] rounded-2xl p-6 border border-white/[0.06] mb-16">
+            <p className="text-[11px] text-white/30 uppercase tracking-wider mb-4 text-center">Zufriedenheit mit der Demokratie (Eurobarometer 2023)</p>
+            <div className="space-y-2">
+              {internationalCeiling.map(c => (
+                <div key={c.country} className="flex items-center gap-3">
+                  <span className="text-base w-6">{c.flag}</span>
+                  <span className="w-24 text-xs text-white/50">{c.country}</span>
+                  <div className="flex-1"><Bar value={c.satisfaction} max={100} color={c.country === 'Deutschland' ? 'bg-accent' : 'bg-sage'} height="h-4" /></div>
+                  <span className={`text-xs font-serif w-10 text-right ${c.country === 'Deutschland' ? 'text-accent-light' : 'text-sage-light'}`}>{c.satisfaction}%</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* The honest truth */}
-          <div className="bg-ink rounded-2xl p-8">
-            <h3 className="font-serif text-2xl text-white text-center mb-6">{truthBomb.question}</h3>
-            <p className="text-white/70 text-sm leading-relaxed mb-6">{truthBomb.answer}</p>
-            <div className="bg-white/5 rounded-xl p-4 mb-6 border border-white/10">
-              <p className="text-white/50 text-xs leading-relaxed">{truthBomb.proof}</p>
-            </div>
-            <div className="grid sm:grid-cols-3 gap-4">
-              <div className="bg-sage/10 rounded-xl p-4 text-center">
-                <p className="text-3xl font-serif text-sage-light mb-1">80%+</p>
-                <p className="text-white/40 text-xs">Ist erreichbar (4 Länder beweisen es)</p>
+          {/* Truth bomb */}
+          <div className="bg-gold/[0.06] rounded-2xl p-8 border border-gold/10 text-center">
+            <h3 className="font-serif text-2xl text-white mb-4">{truthBomb.question}</h3>
+            <p className="text-white/60 text-sm leading-relaxed mb-4">{truthBomb.answer}</p>
+            <div className="grid sm:grid-cols-3 gap-3">
+              <div className="bg-white/[0.04] rounded-xl p-4">
+                <p className="text-2xl font-serif text-sage-light">80%+</p>
+                <p className="text-white/30 text-[10px]">Ist erreichbar</p>
               </div>
-              <div className="bg-gold/10 rounded-xl p-4 text-center">
-                <p className="text-3xl font-serif text-gold mb-1">53→80</p>
-                <p className="text-white/40 text-xs">Deutschlands Weg (+27 Punkte)</p>
+              <div className="bg-white/[0.04] rounded-xl p-4">
+                <p className="text-2xl font-serif text-gold">53→80</p>
+                <p className="text-white/30 text-[10px]">+27 Punkte möglich</p>
               </div>
-              <div className="bg-white/5 rounded-xl p-4 text-center">
-                <p className="text-3xl font-serif text-white/70 mb-1">~10 J.</p>
-                <p className="text-white/40 text-xs">So lange dauert Vertrauensaufbau</p>
+              <div className="bg-white/[0.04] rounded-xl p-4">
+                <p className="text-2xl font-serif text-white/60">~10 J.</p>
+                <p className="text-white/30 text-[10px]">Zeithorizont</p>
               </div>
             </div>
-            <p className="text-white/30 text-xs text-center mt-6">Die Forschung ist klar: Vertrauen baut man auf der Output-Seite — durch faire, funktionierende, respektvolle Institutionen. Nicht durch Reden, sondern durch Tun.</p>
           </div>
         </div>
       </section>
 
-      {/* Generation Impact — For You */}
-      <section id="generationen" className="py-24 px-6 bg-white">
+      {/* ━━ PARTY CHECK ━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="parteien" className="py-20 sm:py-28 px-6 bg-parchment">
         <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Sparkles className="w-5 h-5 text-gold" />
-            <p className="text-gold uppercase tracking-[0.2em] text-sm">Für dich</p>
-          </div>
-          <h2 className="font-serif text-4xl sm:text-5xl text-center mb-4">Was ändert sich in deinem Leben?</h2>
-          <p className="text-center text-ink-light/60 mb-16 max-w-xl mx-auto">Finde dich wieder. Kurzfristig, langfristig, lebenslang.</p>
+          <SectionLabel icon={Scale} label="Parteien-Check" />
+          <SectionTitle sub="Was jede Partei WIRKLICH will — und der Kompromiss der sie über 80% bringt.">
+            Können alle Parteien zustimmen?
+          </SectionTitle>
 
-          <div className="space-y-6">
-            {generationImpact.map((person, i) => (
-              <div key={i} className="bg-parchment/50 rounded-2xl p-6 border border-parchment-dark">
-                <div className="flex items-center gap-4 mb-5">
-                  <span className="text-4xl">{person.emoji}</span>
-                  <div>
-                    <h3 className="font-serif text-xl text-ink">{person.name}</h3>
-                    <p className="text-sm text-ink-light/50">{person.label}</p>
-                  </div>
+          <div className="bg-white rounded-2xl p-6 border border-parchment-dark mb-8">
+            <div className="space-y-2">
+              {partyReactions.map(p => (
+                <div key={p.party} className="flex items-center gap-3">
+                  <span className="w-16 text-xs font-medium">{p.party}</span>
+                  <div className="flex-1"><Bar value={p.approval} max={100} color={p.approval >= 70 ? 'bg-sage' : p.approval >= 50 ? 'bg-gold' : 'bg-accent'} height="h-3" /></div>
+                  <span className="text-xs font-serif w-10 text-right">{p.approval}%</span>
                 </div>
-                <div className="grid sm:grid-cols-3 gap-4">
-                  <div className="bg-gold/5 rounded-xl p-4 border border-gold/10">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-2 h-2 rounded-full bg-gold" />
-                      <p className="text-xs uppercase tracking-wider text-gold/70 font-medium">Sofort</p>
-                    </div>
-                    <p className="text-sm text-ink-light leading-relaxed">{person.shortTerm}</p>
-                  </div>
-                  <div className="bg-sage/5 rounded-xl p-4 border border-sage/10">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-2 h-2 rounded-full bg-sage" />
-                      <p className="text-xs uppercase tracking-wider text-sage/70 font-medium">In 5 Jahren</p>
-                    </div>
-                    <p className="text-sm text-ink-light leading-relaxed">{person.longTerm}</p>
-                  </div>
-                  <div className="bg-sky/5 rounded-xl p-4 border border-sky/10">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-2 h-2 rounded-full bg-sky" />
-                      <p className="text-xs uppercase tracking-wider text-sky/70 font-medium">Lebenslang</p>
-                    </div>
-                    <p className="text-sm text-ink-light leading-relaxed">{person.lifetime}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA / Vision */}
-      <section className="py-24 px-6 bg-gradient-to-b from-ink to-ink-light text-center">
-        <div className="max-w-3xl mx-auto">
-          <Heart className="w-12 h-12 text-gold mx-auto mb-8" />
-          <h2 className="font-serif text-4xl sm:text-5xl text-white mb-6 leading-tight">
-            Keine Utopie.<br />
-            <span className="text-gold">Jedes Element existiert bereits.</span>
-          </h2>
-          <p className="text-xl text-white/60 leading-relaxed mb-4">
-            Japans Ernährungsbildung. Finnlands Prävention. Taiwans Krankenversicherung.
-            Estlands Digitalisierung. Schweizer Tierschutz. Dänemarks Mut.
-          </p>
-          <p className="text-lg text-white/40 mb-8">
-            Wir müssen es nur zusammensetzen.
-          </p>
-
-          <div className="bg-white/5 backdrop-blur rounded-2xl p-8 border border-white/10 mb-12 max-w-lg mx-auto">
-            <p className="text-white/40 text-xs uppercase tracking-wider mb-4">Die Gesamtrechnung</p>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-white/60">Investition</span>
-                <span className="text-accent-light font-serif">€23 Mrd./Jahr</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-white/60">Ersparnis</span>
-                <span className="text-sage-light font-serif">€91 Mrd./Jahr</span>
-              </div>
-              <div className="border-t border-white/10 pt-3 flex justify-between">
-                <span className="text-white font-medium">Netto-Gewinn für Deutschland</span>
-                <span className="text-gold font-serif text-xl">+€68 Mrd.</span>
-              </div>
+              ))}
             </div>
+            <p className="text-xs text-ink-light/40 mt-3 text-center">4 von 6 über 50% · Verfassungsändernde Mehrheit möglich</p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-4 text-3xl mb-12">
-            {["🇯🇵","🇫🇮","🇹🇼","🇪🇪","🇨🇭","🇩🇰","🇵🇹","🇸🇬","🇨🇺","🇬🇧","🇮🇸","🇸🇪"].map((flag, i) => (
-              <span key={i} className="hover:scale-125 transition-transform cursor-default">{flag}</span>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {partyPathTo80.map(p => (
+              <div key={p.party} className="bg-white rounded-xl p-5 border border-parchment-dark">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-serif text-base">{p.party}</h4>
+                  <span className="text-xs font-serif"><span className="text-ink-light/40">{p.currentApproval}</span> → <span className={p.potentialApproval >= 80 ? 'text-sage' : 'text-gold'}>{p.potentialApproval}%</span></span>
+                </div>
+                <Bar value={p.potentialApproval} max={100} color={p.potentialApproval >= 80 ? 'bg-sage' : p.potentialApproval >= 50 ? 'bg-gold' : 'bg-accent'} height="h-2" />
+                <p className="text-[11px] text-ink-light/40 italic mt-3 mb-2">{p.whatTheyReallyWant}</p>
+                <div className="bg-gold/[0.04] rounded-lg p-3 border border-gold/10">
+                  <p className="text-[10px] uppercase tracking-wider text-gold/50 mb-1">Entscheidender Kompromiss</p>
+                  <p className="text-[12px] text-ink-light/60">{p.keyCompromise}</p>
+                </div>
+              </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <p className="text-white/30 text-sm max-w-md mx-auto">
-            4 von 6 Parteien können zustimmen. Die verfassungsändernde Mehrheit ist erreichbar. Der Weg ist klar. Die Rechnung geht auf. Es fehlt nur der Wille.
+      {/* ━━ FOR YOU ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="generationen" className="py-20 sm:py-28 px-6 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <SectionLabel icon={Heart} label="Für dich" />
+          <SectionTitle sub="Sofort. In 5 Jahren. Lebenslang.">
+            Was ändert sich in deinem Leben?
+          </SectionTitle>
+          <div className="space-y-4">
+            {generationImpact.map((person, i) => (
+              <div key={i} className="bg-parchment rounded-2xl p-6 border border-parchment-dark">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">{person.emoji}</span>
+                  <div>
+                    <h3 className="font-serif text-base">{person.name}</h3>
+                    <p className="text-[11px] text-ink-light/40">{person.label}</p>
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-3 gap-3">
+                  {[
+                    { label: 'Sofort', color: 'gold', text: person.shortTerm },
+                    { label: 'In 5 Jahren', color: 'sage', text: person.longTerm },
+                    { label: 'Lebenslang', color: 'sky', text: person.lifetime },
+                  ].map((col, j) => (
+                    <div key={j} className={`bg-${col.color}/[0.04] rounded-xl p-4 border border-${col.color}/10`}>
+                      <Chip color={`bg-${col.color}/10 text-${col.color}`}>{col.label}</Chip>
+                      <p className="text-xs text-ink-light/60 mt-2 leading-relaxed">{col.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ━━ FINAL CTA ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="py-24 sm:py-32 px-6 bg-ink text-center relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] rounded-full bg-gold/10 blur-[200px] glow-orb" />
+        </div>
+        <div className="relative z-10 max-w-2xl mx-auto">
+          <Heart className="w-10 h-10 text-gold mx-auto mb-8 opacity-80" />
+          <h2 className="font-serif text-4xl sm:text-5xl text-white mb-6 leading-tight">
+            Jedes Element existiert bereits.<br /><span className="text-gold">Irgendwo auf der Welt.</span>
+          </h2>
+          <p className="text-white/40 text-sm mb-8 leading-relaxed">
+            Wir müssen es nur zusammensetzen. Und anfangen.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 text-2xl mb-12">
+            {["🇯🇵","🇫🇮","🇹🇼","🇪🇪","🇨🇭","🇩🇰","🇵🇹","🇸🇬","🇨🇺","🇬🇧","🇮🇸","🇸🇪"].map((flag, i) => (
+              <span key={i} className="hover:scale-150 transition-transform duration-300 cursor-default">{flag}</span>
+            ))}
+          </div>
+          <p className="text-white/20 text-xs max-w-md mx-auto leading-relaxed">
+            Die verfassungsändernde Mehrheit ist erreichbar. Die Rechnung geht auf.
+            Der Weg ist klar. Es fehlt nur der Anfang.
           </p>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-6 bg-ink text-center">
-        <p className="text-white/30 text-sm">Deutschland 2030 — Ein Manifest für die Zukunft</p>
-        <p className="text-white/20 text-xs mt-2">
-          Basierend auf simulierten Bundestagsdebatten und internationaler Politikanalyse.
-          Alle Zahlen aus öffentlichen Quellen (OECD, WHO, Bundestag, DIW, IW Köln).
+      {/* ━━ FOOTER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <footer className="py-10 px-6 bg-ink border-t border-white/[0.03] text-center">
+        <p className="text-white/20 text-xs">Deutschland 2030 — Manifest für die Zukunft</p>
+        <p className="text-white/10 text-[10px] mt-1">
+          Daten: OECD, WHO, Eurobarometer, World Happiness Report, Bundestag · Open Source
         </p>
-        <p className="text-white/10 text-xs mt-4">Gebaut mit Überzeugung. Open Source.</p>
       </footer>
     </div>
   )
 }
-
-export default App

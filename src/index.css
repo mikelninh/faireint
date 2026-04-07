@@ -3,15 +3,17 @@
 @theme {
   --color-gold: #C4A265;
   --color-gold-light: #D4B880;
-  --color-ink: #1A1A2E;
-  --color-ink-light: #2D2D44;
-  --color-parchment: #FAF8F5;
-  --color-parchment-dark: #F0EDE8;
-  --color-accent: #B85C38;
-  --color-accent-light: #E07A5F;
+  --color-ink: #0F0F1A;
+  --color-ink-light: #1E1E32;
+  --color-ink-mid: #2A2A40;
+  --color-parchment: #FAFAF8;
+  --color-parchment-dark: #EEEEE8;
+  --color-accent: #E07A5F;
+  --color-accent-light: #F09A80;
   --color-sage: #4A7C59;
   --color-sage-light: #7FB069;
   --color-sky: #5B8FA8;
+  --color-sky-light: #7DB4CC;
   --font-serif: 'Georgia', 'Times New Roman', serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -21,15 +23,53 @@
     scroll-behavior: smooth;
     font-family: var(--font-sans);
     color: var(--color-ink);
-    background: var(--color-parchment);
+    background: var(--color-ink);
   }
-
-  body {
-    margin: 0;
-  }
-
-  ::selection {
-    background: var(--color-gold);
-    color: white;
-  }
+  body { margin: 0; }
+  ::selection { background: var(--color-gold); color: white; }
 }
+
+/* Scroll-triggered animations */
+@layer utilities {
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+  }
+  .fade-up-delay-1 { animation-delay: 0.1s; }
+  .fade-up-delay-2 { animation-delay: 0.2s; }
+  .fade-up-delay-3 { animation-delay: 0.3s; }
+  .fade-up-delay-4 { animation-delay: 0.4s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.7; }
+  }
+
+  .glow-orb {
+    animation: pulse-soft 4s ease-in-out infinite;
+  }
+
+  .count-bar {
+    animation: growWidth 1.5s ease forwards;
+    transform-origin: left;
+  }
+  @keyframes growWidth {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  /* Smooth section transitions */
+  .section-light { background: var(--color-parchment); }
+  .section-dark { background: var(--color-ink); color: white; }
+  .section-mid { background: var(--color-ink-light); color: white; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-ink); }
+::-webkit-scrollbar-thumb { background: var(--color-gold); border-radius: 3px; }

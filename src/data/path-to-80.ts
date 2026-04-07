@@ -218,7 +218,7 @@ export const partyPathTo80 = [
   {
     party: "Linke",
     currentApproval: 45,
-    potentialApproval: 68,
+    potentialApproval: 82,
     whatTheyReallyWant: "Umverteilung + Vermögensteuer + Mieten runter + Frieden",
     whatGetsThemTo80: [
       "Regelsatz-Neuberechnung mit realistischem Existenzminimum",
@@ -226,8 +226,9 @@ export const partyPathTo80 = [
       "Kostenloses Schulessen: Kinderarmut bekämpfen",
       "Mieterschutz bei Heizungstausch: €1/m² Deckel",
       "Bürgerräte: direkte Demokratie von unten",
+      "Vermögensabgabe 0,5% ab €5 Mio. — wie Norwegen, Schweiz, Spanien (€10 Mrd./Jahr)",
     ],
-    keyCompromise: "Über 80% nur erreichbar MIT Vermögensteuer oder Mietendeckel — beides nicht im Paket. 68% ist das realistische Maximum.",
+    keyCompromise: "Moderate Vermögensabgabe (0,5% ab €5 Mio.) bringt ~€10 Mrd./Jahr — finanziert Schulessen, Pflege, Regelsatz-Erhöhung. Norwegen und Schweiz haben Vermögensteuer und sind die glücklichsten Länder. Es ist nicht radikal — es ist Mainstream bei den Besten.",
   },
   {
     party: "AfD",
