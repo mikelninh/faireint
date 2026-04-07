@@ -1,36 +1,51 @@
-# Deutschland 2030
+# Deutschland 2030 🇩🇪
 
-**Manifest for the Future** — What if we took the best from 12 countries and built one?
+**Manifest für die Zukunft** — Was wäre, wenn wir das Beste aus 12 Ländern nehmen und daraus ein Land bauen?
 
-A digital platform that makes politics understandable, simulates citizen reactions, and proposes evidence-based reforms. Designed for schools, students, citizens, and politicians.
+Eine interaktive Plattform die Politik verständlich macht, Bürger-Reaktionen simuliert und evidenzbasierte Reformen vorschlägt. Für Schulen, Schüler, Bürger und Politiker.
 
-## What It Does
+## Was die Seite zeigt
 
-- **9 Reform Areas** — Energy, Pensions, Social Welfare, Tax, Service, Nutrition, Health, Animal Welfare, Education
-- **Policy Simulator** — Pick a policy, see how 24 personas (representing 96% of Germany) react. Weighted approval scores.
-- **7 Democracy Innovations** — Ideas that don't exist anywhere: GitLaw, Constituency Dashboard, Generational Scoring, AI Deliberation, Lobbying Tracing, PolicyEngine+AI, Permanent Sortition Chamber
-- **Voter Satisfaction Simulation** — 8 detailed voter profiles (24% → 66% average satisfaction after reforms)
-- **Path to 80%** — Based on World Happiness Report, OECD Trust Survey, Tyler's procedural justice, Rothstein's Quality of Government
-- **Party Check** — How much can each party agree? Simulated approval with key compromises
-- **Cost/Benefit Math** — €23B investment → €91B savings = +€68B net (€820 per citizen per year)
+### Die Reformen
+- **9 Bereiche** — Energie, Rente, Soziales, Steuern, Gesellschaftsdienst, Ernährung, Gesundheit, Tierschutz, Bildung
+- **Konkreter Fahrplan** — 2026→2035, mit spezifischen Gesetzen pro Quartal
+- **Kosten-Nutzen-Rechnung** — €23 Mrd. Investition → €91 Mrd. Ersparnis = +€68 Mrd. Nettogewinn
 
-## 12 Countries as Role Models
+### Der Simulator
+- **Policy-Simulator** — 5 Reformen durchklicken, 24 Personas (96% der Bevölkerung) reagieren mit gewichtetem Zustimmungswert
+- **8 Wählerprofile** — Handwerker, Studentin, Rentnerin, Unternehmer, Pflegekraft, Geflüchteter, Bauer, AfD-Wähler. Zufriedenheit: 24% → 66%
+- **Parteien-Check** — Wie viel kann jede Partei zustimmen? Mit Kompromiss-Vorschlägen
 
-Japan (nutrition education, health checks), Finland (free school meals, North Karelia -82% CVD deaths), Taiwan (single-payer healthcare at 6.6% GDP), Estonia (digital government in 3 minutes), Switzerland (direct democracy), Denmark (flexicurity, 92% satisfaction), Portugal (mandatory vegan option in all public canteens), Singapore (prevention-first, 4.1% GDP healthcare), Cuba (community doctors), UK (sugar tax), Iceland (4-day work week), Sweden (AP7 pension fund, parental leave).
+### Die Innovation
+- **7 Demokratie-Ideen die es nirgendwo gibt** — GitLaw (Gesetze versionieren), Wähler-Dashboard, Generationen-Score, AI Deliberation, Lobbying-Tracing, PolicyEngine+AI, Permanente Bürger-Kammer
 
-## The Vision
+## 12 Länder als Vorbild
 
-> "Every element already exists — somewhere in the world. We just need to put it together."
+| Land | Was wir übernehmen |
+|------|-------------------|
+| 🇯🇵 Japan | Ernährungsbildung (Shokuiku), Pflicht-Gesundheitscheck |
+| 🇫🇮 Finnland | Kostenloses Schulessen, North-Karelia (-82% Herztode) |
+| 🇹🇼 Taiwan | Single-Payer Krankenversicherung (6,6% BIP) |
+| 🇪🇪 Estland | Digitale Verwaltung (3-Minuten-Steuererklärung) |
+| 🇨🇭 Schweiz | Würde des Tieres, Direkte Demokratie |
+| 🇩🇰 Dänemark | Flexicurity, CO₂-Steuer auf Tierhaltung |
+| 🇵🇹 Portugal | Vegane Pflicht-Option in allen öffentlichen Kantinen |
+| 🇸🇬 Singapur | Prävention-first (84 Jahre Lebenserwartung, 4,1% BIP) |
+| 🇨🇺 Kuba | 1 Arzt pro 1.000 Einwohner, Hausbesuche |
+| 🇬🇧 UK | Zuckersteuer (-46% Zucker in Softdrinks) |
+| 🇮🇸 Island | 4-Tage-Woche (gleiche Produktivität) |
+| 🇸🇪 Schweden | AP7-Rentenfonds (~10%/Jahr), Elternzeit 480 Tage |
 
-**6 Principles:**
-1. Prevention over repair
-2. Education over punishment
-3. Nutrition over medication
-4. Dignity for all living beings
-5. One system for everyone
-6. The best from around the world
+## 6 Prinzipien
 
-## Run Locally
+1. Prävention statt Reparatur
+2. Bildung statt Bestrafung
+3. Ernährung statt Medikamente
+4. Würde für alle Lebewesen
+5. Ein System für alle
+6. Das Beste aus der ganzen Welt
+
+## Lokal starten
 
 ```bash
 npm install
@@ -42,10 +57,14 @@ npm run build   # Production build
 
 React 19 + TypeScript + Vite 8 + Tailwind CSS v4 + Lucide icons.
 
-## Data Sources
+## Datenquellen
 
-OECD, WHO, Eurobarometer, World Happiness Report, Destatis, Bundestag, DIW, IW Köln, SINUS-Institut, BAMF, Bundesagentur für Arbeit.
+OECD, WHO, Eurobarometer, World Happiness Report, Destatis, Bundestag, DIW, IW Köln, SINUS-Institut, BAMF, Tyler (Procedural Justice), Rothstein (Quality of Government).
 
-## License
+## Verwandt
 
-Open source. Built with conviction.
+- **[GitLaw](https://github.com/mikelninh/gitlaw)** — Alle 5.938 Bundesgesetze als durchsuchbares Archiv
+
+## Lizenz
+
+Open Source. Gebaut mit Überzeugung.
