@@ -90,6 +90,19 @@ export const timeline: TimelineStep[] = [
     ],
   },
   {
+    year: "2029",
+    quarter: "Q3",
+    title: "Vermögensreform",
+    description: "Faire Verteilung — die größte ungelöste Frage",
+    status: "mid",
+    laws: [
+      "Vermögensteuer reaktiviert: 0,5% ab €5 Mio. (Art. 106 GG — nie abgeschafft, nur ausgesetzt seit 1996)",
+      "Erbschaftsteuer-Reform: Betriebsvermögensprivileg gedeckelt bei €50 Mio.",
+      "Abgeltungssteuer abgeschafft: Kapitalerträge in Einkommensteuer integriert",
+      "UBS Stufe 1: Gratis ÖPNV u25/ü65, kostenlose Kinderbetreuung 0-6",
+    ],
+  },
+  {
     year: "2030",
     quarter: "",
     title: "Zwischenbilanz",
@@ -98,22 +111,24 @@ export const timeline: TimelineStep[] = [
     laws: [
       "CO₂-Preis Gebäude: €200/Tonne erreicht",
       "Ölheizungs-Verbot (rein fossil) in Kraft",
-      "Cannabis: Bundestag-Abstimmung über Fortführung",
       "Schulessen: Flächendeckend kostenlos",
+      "Boden-Wertsteuer als Ergänzung zur Grundsteuer",
+      "UBS Stufe 2: Basisenergie-Pauschale, Breitband als Grundrecht",
     ],
   },
   {
     year: "2035",
     quarter: "",
     title: "Strukturwandel abgeschlossen",
-    description: "Deutschland ist ein anderes Land",
+    description: "Deutschland ist ein anderes Land — fairer, stärker, nachhaltiger",
     status: "future",
     laws: [
       "140 GW Wind + 280 GW Solar installiert",
-      "Bundeswehr: 250.000 Soldaten + 200.000 Reserve",
       "Deutschlandfonds: erste Generation profitiert sichtbar",
       "Massentierhaltung weitgehend beendet",
       "Präventions-Anteil: 6% der Gesundheitsausgaben (von 3%)",
+      "Universal Basic Access als Rechtsrahmen: Zugang zu Wohnung, Gesundheit, Bildung, Mobilität, Digital, Ernährung",
+      "EU-weite Mindest-Vermögensteuer in Verhandlung",
     ],
   },
 ]
@@ -197,6 +212,27 @@ export const costs: CostBenefit[] = [
       { label: "Weniger Orientierungslosigkeit bei Jugendlichen", amount: 1.2 },
     ],
   },
+  {
+    reform: "Vermögensverteilung (UBS + Vermögensteuer + Erbschaftsreform)",
+    annualCost: 45.0,
+    annualSaving: 110.0,
+    breakEvenYears: 1,
+    costItems: [
+      { label: "Universal Basic Services (Schulessen, ÖPNV, Kita, Energie, Digital)", amount: 35.0 },
+      { label: "Deutschlandfonds: Staatliche Zulagen", amount: 8.0 },
+      { label: "Verwaltung Vermögensteuer + Erbschaftsteuer-Reform", amount: 0.5 },
+      { label: "Boden-Wertsteuer-Einführung", amount: 1.5 },
+    ],
+    savingItems: [
+      { label: "Vermögensteuer 0,5% ab €5 Mio. (Einnahmen)", amount: 12.0 },
+      { label: "Erbschaftsteuer-Reform (geschlossene Schlupflöcher)", amount: 8.0 },
+      { label: "Kapitalerträge in Einkommensteuer (Mehreinnahmen)", amount: 25.0 },
+      { label: "Verlorenes BIP-Wachstum durch Ungleichheit (vermieden)", amount: 40.0 },
+      { label: "Gesundheitskosten durch Armut (vermieden)", amount: 12.0 },
+      { label: "Kriminalitätskosten durch Ungleichheit (vermieden)", amount: 8.0 },
+      { label: "Boden-Wertsteuer (Einnahmen + weniger Spekulation)", amount: 5.0 },
+    ],
+  },
 ]
 
 export const partyReactions: PartyReaction[] = [
@@ -212,11 +248,13 @@ export const partyReactions: PartyReaction[] = [
       "Gesellschaftsdienst mit Bundeswehr-Komponente",
       "Technologieoffenheit im GEG",
       "Vermittlungsvorrang im Sozialrecht",
+      "Erbschaftsteuer-Freibetrag €50 Mio. schützt Mittelstand",
     ],
     concerns: [
       "Splitting-Deckelung geht zu weit",
       "GKV/PKV-Zusammenführung nicht im Koalitionsvertrag",
-      "Tempolimit nur als Notmaßnahme akzeptiert",
+      "Vermögensteuer leistungsfeindlich — nur mit EU-Koordination",
+      "UBS darf nicht zur Planwirtschaft werden",
     ],
   },
   {
@@ -224,17 +262,18 @@ export const partyReactions: PartyReaction[] = [
     color: "#E3000F",
     emoji: "🔴",
     approval: 78,
-    quote: "Die soziale Gerechtigkeit zieht sich durch jede Reform.",
+    quote: "Die soziale Gerechtigkeit zieht sich durch jede Reform — Vermögensverteilung ist der Kern.",
     wins: [
       "48% Rentenniveau gesichert",
       "Kinderbonus €2.000 einkommensunabhängig",
-      "Sanktionsdeckel 30% + Gesundheitscheck",
       "Kostenloses Schulessen",
-      "Mieterschutz bei Heizungstausch",
+      "Vermögensteuer reaktiviert — Kernforderung seit Jahrzehnten",
+      "UBS: Kostenlose Grunddienste für alle",
+      "Erbschaftsteuer-Schlupflöcher geschlossen",
     ],
     concerns: [
-      "Hätten gerne Realsplitting sofort, nicht erst ab 2030",
-      "Tierschutz-Tempo könnte schneller sein",
+      "Hätten gerne höhere Vermögensteuer (1% statt 0,5%)",
+      "UBI wäre noch besser als UBS",
     ],
   },
   {
@@ -289,9 +328,10 @@ export const partyReactions: PartyReaction[] = [
     ],
     concerns: [
       "563€ Regelsatz ist Armut — braucht mindestens €700",
-      "Vermögensteuer fehlt komplett",
+      "0,5% Vermögensteuer ist zu wenig — braucht 2%+",
       "Gesellschaftsdienst mit Militär: Nein",
       "Rentenniveau sollte 53% sein",
+      "UBI statt UBS — Menschen brauchen Geld, nicht Bevormundung",
     ],
   },
   {

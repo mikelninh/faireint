@@ -198,11 +198,33 @@ export const reforms: Reform[] = [
     ],
     story: { name: "Ben", age: 10, role: "Grundschüler in Dortmund", before: "Stress wegen Gymnasium-Übergang, keine Schulpsychologin", after: "Wohlbefinden-Befragung zeigt Probleme → Schule bekommt Psychologin + Anti-Mobbing-Programm. Ben lernt Programmieren, kocht mit der Klasse, geht gerne hin." },
   },
+  {
+    id: "vermoegen",
+    emoji: "💰",
+    title: "Vermögensverteilung",
+    subtitle: "Gerechtigkeit, nicht Neid — Wohlstand für alle",
+    problem: "Top 10% besitzen 67% des Gesamtvermögens. Untere 50% besitzen 1,4%. Deutschlands Median-Vermögen (~€65.000) ist niedriger als in Italien, Spanien, Griechenland. Keine Vermögensteuer seit 1996. Effektive Erbschaftsteuer auf Großvermögen: 2,3% (durch Betriebsvermögensprivileg). Kapitalerträge werden mit 25% besteuert — Arbeit mit bis zu 45%. Ungleichheit kostet Deutschland ~€70-110 Mrd./Jahr (verlorenes Wachstum, Gesundheit, Kriminalität).",
+    solution: [
+      "Vermögensteuer reaktivieren: 0,5% ab €5 Mio. (wie Norwegen/Schweiz) → €10-15 Mrd./Jahr",
+      "Erbschaftsteuer: Betriebsvermögensprivileg deckeln bei €50 Mio. → €5-10 Mrd./Jahr",
+      "Kapitalerträge wie Arbeit besteuern: Abgeltungssteuer abschaffen → €20-30 Mrd./Jahr",
+      "Deutschlandfonds: Öffentlicher Kapitalfonds für alle Bürger (2% AN + 1% AG)",
+      "Universal Basic Services: Kostenloses Schulessen, ÖPNV u25/ü65, Kinderbetreuung → €30-45 Mrd./Jahr",
+      "Boden-Wertsteuer: Spekulation auf unbenutztes Land verteuern (wie Estland/Taiwan)",
+    ],
+    worldwide: [
+      { country: "Norwegen", flag: "🇳🇴", lesson: "Staatsfonds $1,7 Billionen = €310.000 pro Bürger. Öl-Einnahmen gehören ALLEN." },
+      { country: "Schweiz", flag: "🇨🇭", lesson: "Vermögensteuer 0,05-1% existiert seit Jahrzehnten. Bringt €9,5 Mrd./Jahr (4,3% der Steuereinnahmen)." },
+      { country: "Wien", flag: "🇦🇹", lesson: "62% leben in Gemeindebau oder gefördertem Wohnen. Durchschnittsmiete €500 warm. Kein Wohnungsmangel." },
+      { country: "Japan", flag: "🇯🇵", lesson: "CEO-zu-Arbeiter-Verhältnis 10:1 (USA: 300:1). Kulturelle Norm gegen extreme Reichtumszurschaustellung." },
+    ],
+    story: { name: "Sabine", age: 42, role: "Alleinerziehende Erzieherin in München", before: "€1.450 netto, €980 Miete, €200 Kita-Gebühr. Spart €0/Monat. Deutschlandfonds existiert nicht. Kein Vermögen, keine Rente außer Grundsicherung.", after: "Kita kostenlos (spart €200), ÖPNV gratis (spart €49), Schulessen frei (spart €80). Deutschlandfonds baut €280/Monat Vermögen auf. Erster Kontostand mit Substanz seit 15 Jahren." },
+  },
 ]
 
 export const stats = [
   { value: "12", label: "Länder als Vorbild" },
-  { value: "9", label: "Reformbereiche" },
+  { value: "10", label: "Reformbereiche" },
   { value: "7", label: "Simulierte Gesetzentwürfe" },
   { value: "1", label: "Ziel: Deutschland 2030" },
 ]
