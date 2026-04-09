@@ -12,9 +12,47 @@ export interface CostBenefit {
   annualCost: number
   annualSaving: number
   breakEvenYears: number
+  source?: string // URL to primary source
   costItems: { label: string; amount: number }[]
   savingItems: { label: string; amount: number }[]
 }
+
+// Expert quotes for credibility
+export interface ExpertQuote {
+  name: string
+  role: string
+  quote: string
+  source?: string
+}
+
+export const expertQuotes: ExpertQuote[] = [
+  { name: "Marcel Fratzscher", role: "Präsident DIW Berlin", quote: "Deutschland hat eine der höchsten Vermögensungleichheiten in Europa. Eine moderate Vermögensteuer würde das Wachstum nicht bremsen — Ungleichheit tut es.", source: "DIW Wochenbericht 2024" },
+  { name: "IMF Fiscal Monitor", role: "Internationaler Währungsfonds", quote: "Wenn der Einkommensanteil der unteren 20% um 1 Prozentpunkt steigt, wächst das BIP in den folgenden 5 Jahren um 0,38 Prozentpunkte.", source: "IMF Fiscal Monitor 2014" },
+  { name: "WHO Europe", role: "Weltgesundheitsorganisation", quote: "Jeder Euro für Prävention spart 3 bis 7 Euro für Behandlung — je nach Krankheitsbild und Zeithorizont.", source: "WHO Health Evidence Network 2023" },
+  { name: "Sachverständigenrat", role: "Wirtschaftsweise", quote: "Die Integration von Kapitalerträgen in die Einkommensteuer würde die horizontale Steuergerechtigkeit erhöhen.", source: "SVR Jahresgutachten 2023/24" },
+  { name: "Thomas Piketty", role: "Ökonom, Paris School of Economics", quote: "Ohne aktive Umverteilung wächst die Vermögenskonzentration immer weiter — weil die Kapitalrendite dauerhaft über dem Wirtschaftswachstum liegt (r > g).", source: "Das Kapital im 21. Jahrhundert" },
+]
+
+// FAQ / Gegenargumente — what critics say + honest answers
+export interface FAQ {
+  question: string
+  answer: string
+}
+
+export const faqs: FAQ[] = [
+  { question: "Führt eine Vermögensteuer nicht zu Kapitalflucht?",
+    answer: "Norwegen verlor nach Einführung ca. 0,5% der Steuerbasis. Die Schweiz erhebt sie seit Jahrzehnten ohne nennenswerte Flucht — weil die Lebensqualität die Steuer überwiegt. Entscheidend: EU-weite Koordination verhindert Steuerwettbewerb. Die OECD arbeitet bereits daran." },
+  { question: "Warum sollten Reiche mehr zahlen? Sie haben das Geld verdient.",
+    answer: "0,5% ab €5 Mio. betrifft 0,3% der Bevölkerung. Die Schweiz zeigt: moderate Vermögensteuer und Unternehmertum schließen sich nicht aus. Gleichzeitig: Kapitalerträge werden mit 25% besteuert, Arbeit mit bis zu 45%. Wer arbeitet, zahlt mehr als wer Geld anlegt. Das ist das eigentliche Gerechtigkeitsproblem." },
+  { question: "Können wir uns €61 Mrd. pro Jahr leisten?",
+    answer: "Deutschland hat 2022-2023 über €100 Mrd. für die Energiekrise ausgegeben — an einem Wochenende beschlossen. Der Bundeshaushalt 2026 beträgt €520 Mrd. Die Reformen kosten 12% davon, erwirtschaften aber selbst im konservativen Szenario mehr als sie kosten." },
+  { question: "Sind die Simulationsergebnisse echte Umfragen?",
+    answer: "Nein. Die 23 Personas sind fiktive Profile, gewichtet nach Sinus-Milieus. Die Zustimmungswerte sind modellbasierte Schätzungen, keine empirischen Daten. Wir kennzeichnen das klar. Für echte Umfragedaten empfehlen wir Infratest dimap oder Forschungsgruppe Wahlen." },
+  { question: "Ist UBS nicht Sozialismus?",
+    answer: "Kostenloses Schulessen gibt es in Finnland seit 1948. Wiens Gemeindebau existiert seit 100 Jahren. Singapur — kein sozialistisches Land — hat 82% öffentlichen Wohnungsbau. UBS bedeutet nicht Planwirtschaft, sondern: Grundbedürfnisse garantieren, darüber hinaus freie Marktwirtschaft." },
+  { question: "Warum sollte ich einer Website ohne wissenschaftlichen Beirat vertrauen?",
+    answer: "Solltest du nicht blind. Deshalb ist jede Berechnung im Quellcode einsehbar, jede Quelle verlinkt, und wir benennen offen was wir nicht wissen. Dieses Projekt ist ein Diskussionsbeitrag — kein Gutachten. Prüfe die Zahlen selbst. Wenn du Fehler findest, melde sie auf GitHub." },
+]
 
 export interface PartyReaction {
   party: string
@@ -75,6 +113,7 @@ export const costs: CostBenefit[] = [
     annualCost: 4.1,
     annualSaving: 8.2,
     breakEvenYears: 0,
+    source: "https://www.bmel.de/DE/themen/ernaehrung/gesunde-ernaehrung/kita-und-schulverpflegung/kita-und-schulverpflegung_node.html",
     costItems: [
       { label: "8 Mio. Schüler × €2,70 × 190 Tage", amount: 4.1 },
     ],
@@ -89,6 +128,7 @@ export const costs: CostBenefit[] = [
     annualCost: 6.0,
     annualSaving: 42.0,
     breakEvenYears: 3,
+    source: "https://www.who.int/europe/publications/i/item/9789289058988",
     costItems: [
       { label: "Pflicht-Gesundheitschecks für alle 35-74", amount: 2.5 },
       { label: "Kommunale Präventionsprogramme (50 Kreise)", amount: 1.5 },
@@ -107,6 +147,7 @@ export const costs: CostBenefit[] = [
     annualCost: 0,
     annualSaving: 7.0,
     breakEvenYears: 0,
+    source: "https://www.bertelsmann-stiftung.de/de/themen/aktuelle-meldungen/2019/november/eine-einheitliche-krankenversicherung",
     costItems: [
       { label: "Übergangskosten (einmalig, auf 5 Jahre verteilt)", amount: 2.0 },
     ],
@@ -121,6 +162,7 @@ export const costs: CostBenefit[] = [
     annualCost: 0,
     annualSaving: 25.0,
     breakEvenYears: 15,
+    source: "https://www.diw.de/de/diw_01.c.893214.de/publikationen/wochenberichte/2024_18/staatsfonds_fuer_die_altersvorsorge.html",
     costItems: [
       { label: "Aufbaukosten Fonds-Verwaltung", amount: 0.3 },
       { label: "Staatliche Zulagen (€175/Person + €200/Kind)", amount: 8.0 },
@@ -153,6 +195,7 @@ export const costs: CostBenefit[] = [
     annualCost: 45.0,
     annualSaving: 110.0,
     breakEvenYears: 1,
+    source: "https://wid.world/country/germany/",
     costItems: [
       { label: "Universal Basic Services (Schulessen, ÖPNV, Kita, Energie, Digital)", amount: 35.0 },
       { label: "Deutschlandfonds: Staatliche Zulagen", amount: 8.0 },

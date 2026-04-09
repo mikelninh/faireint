@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { reforms, principles } from './data/manifesto'
-import { timeline, costs, partyReactions } from './data/roadmap'
+import { timeline, costs, partyReactions, expertQuotes, faqs } from './data/roadmap'
 import { voters, satisfactionSummary } from './data/voters'
 import { partyPathTo80 } from './data/path-to-80'
 import { policyScenarios, simulatePolicy, personas } from './data/personas'
@@ -54,6 +54,44 @@ export default function App() {
   const [openInnovation, setOpenInnovation] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
   const [fontSize, setFontSize] = useState(0) // -1, 0, +1
+  const [showNPS, setShowNPS] = useState(false)
+  const [npsSubmitted, setNpsSubmitted] = useState(false)
+  const [openFAQ, setOpenFAQ] = useState<number | null>(null)
+  // Return visitor tracking + NPS timer
+  useEffect(() => {
+    try {
+      const visits = parseInt(localStorage.getItem('faireint_visits') || '0') + 1
+      localStorage.setItem('faireint_visits', String(visits))
+      trackAction('visit')
+      if (visits > 1) trackAction('return_visit')
+    } catch { /* silent */ }
+
+    // Show NPS after 90 seconds if not submitted before
+    const alreadySubmitted = localStorage.getItem('faireint_nps_done')
+    if (!alreadySubmitted) {
+      const timer = setTimeout(() => setShowNPS(true), 90000)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
+  // Scroll depth tracking via Intersection Observer
+  useEffect(() => {
+    const sections = ['problem', 'reformen', 'rechnung', 'simulator', 'parteien', 'fahrplan', 'handeln']
+    const observers: IntersectionObserver[] = []
+    sections.forEach(id => {
+      const el = document.getElementById(id)
+      if (!el) return
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          trackAction(`scroll_${id}`)
+          obs.disconnect()
+        }
+      }, { threshold: 0.3 })
+      obs.observe(el)
+      observers.push(obs)
+    })
+    return () => observers.forEach(o => o.disconnect())
+  }, [])
 
   function showToast(msg: string) {
     setToast(msg)
@@ -310,11 +348,26 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                   <div className="bg-red-light rounded-xl p-3 text-center"><p className="text-xl font-display text-red">€{c.annualCost}</p><p className="text-xs text-ink-muted">Mrd. Kosten</p></div>
                   <div className="bg-green-light rounded-xl p-3 text-center"><p className="text-xl font-display text-green">€{c.annualSaving}</p><p className="text-xs text-ink-muted">Mrd. Ersparnis</p></div>
                 </div>
+                {c.source && <a href={c.source} target="_blank" rel="noopener noreferrer" className="text-xs text-gold hover:underline">Quelle &rarr;</a>}
               </Card>
             )
           })}
         </div>
         <p className="text-center text-sm text-ink-muted mt-6">Dies sind keine beschlossenen Gesetze. Es sind evidenzbasierte Vorschläge mit nachprüfbaren Quellen.</p>
+
+        {/* Expert quotes for credibility */}
+        <div className="mt-10">
+          <p className="text-center text-xs font-bold text-ink-muted uppercase tracking-widest mb-4">Was Experten sagen</p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {expertQuotes.slice(0, 4).map((eq, i) => (
+              <div key={i} className="bg-bg-alt rounded-xl p-4 border border-border">
+                <p className="text-sm text-ink-soft italic mb-2">&bdquo;{eq.quote}&ldquo;</p>
+                <p className="text-xs text-ink-muted font-bold">{eq.name}</p>
+                <p className="text-xs text-ink-muted">{eq.role}{eq.source && <> &middot; <span className="text-gold">{eq.source}</span></>}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </WideSection>
 
       {/* ━━━━ 6. POLICY SIMULATOR ━━━━ */}
@@ -326,7 +379,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         </div>
         <div className="flex gap-2 overflow-x-auto pb-2 mb-8 -mx-2 px-2 sm:flex-wrap sm:justify-center sm:overflow-visible">
           {policyScenarios.map(s => (
-            <button key={s.id} onClick={() => setActivePolicy(s.id)}
+            <button key={s.id} onClick={() => { setActivePolicy(s.id); trackAction(`sim_${s.id}`) }}
               className={`px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-all whitespace-nowrap shrink-0 ${activePolicy === s.id ? 'bg-gold text-white shadow-md' : 'bg-bg-card border border-border text-ink-muted hover:text-ink'}`}>
               {s.emoji} {s.title}
             </button>
@@ -447,6 +500,33 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           ))}
         </div>
       </WideSection>
+
+      {/* ━━━━ FAQ / GEGENARGUMENTE ━━━━ */}
+      <Section bg="bg-bg">
+        <div className="text-center mb-10">
+          <Tag color="red">Gegenargumente</Tag>
+          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Was Kritiker sagen</h2>
+          <p className="text-ink-muted">Ehrliche Fragen verdienen ehrliche Antworten.</p>
+        </div>
+        <div className="space-y-3">
+          {faqs.map((faq, i) => {
+            const open = openFAQ === i
+            return (
+              <div key={i} className={`rounded-2xl border transition-all ${open ? 'bg-bg-card shadow-lg border-gold/30' : 'bg-bg-card border-border'}`}>
+                <button onClick={() => setOpenFAQ(open ? null : i)} className="w-full flex items-center justify-between p-5 text-left cursor-pointer">
+                  <span className="font-display text-[15px] pr-4">{faq.question}</span>
+                  {open ? <ChevronUp className="w-5 h-5 text-gold shrink-0" /> : <ChevronDown className="w-5 h-5 text-ink-muted/30 shrink-0" />}
+                </button>
+                {open && (
+                  <div className="px-5 pb-5">
+                    <p className="text-sm text-ink-soft leading-relaxed">{faq.answer}</p>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </Section>
 
       {/* ━━━━ 9. FAHRPLAN ━━━━ */}
       <Section id="fahrplan" bg="bg-bg">
@@ -668,6 +748,28 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         <p className="text-ink-muted text-sm">FairEint &mdash; Einigkeit beginnt mit Fairness</p>
         <p className="text-ink-muted/50 text-xs mt-1">Quellen: OECD &middot; WHO &middot; IMF &middot; Bundesbank &middot; Eurostat &middot; World Inequality Database</p>
       </footer>
+
+      {/* ── NPS Micro-Survey (appears after 90 seconds) ── */}
+      {showNPS && !npsSubmitted && (
+        <div className="fixed bottom-6 right-6 z-50 bg-bg-card border border-border rounded-2xl shadow-xl p-5 max-w-xs animate-fade-in">
+          <button onClick={() => setShowNPS(false)} className="absolute top-2 right-3 text-ink-muted hover:text-ink cursor-pointer text-lg">&times;</button>
+          <p className="font-display text-sm mb-3">Würdest du FairEint weiterempfehlen?</p>
+          <div className="flex gap-1 mb-2">
+            {[1,2,3,4,5,6,7,8,9,10].map(n => (
+              <button key={n} onClick={() => {
+                trackAction(`nps_${n}`)
+                localStorage.setItem('faireint_nps_done', String(n))
+                setNpsSubmitted(true)
+                showToast(n >= 7 ? 'Danke! Teile FairEint mit einer Person die es lesen sollte.' : 'Danke für dein ehrliches Feedback!')
+                setTimeout(() => setShowNPS(false), 3000)
+              }} className="w-8 h-8 rounded-lg text-xs font-bold cursor-pointer transition-colors bg-bg-alt hover:bg-gold hover:text-white border border-border">
+                {n}
+              </button>
+            ))}
+          </div>
+          <div className="flex justify-between text-xs text-ink-muted"><span>Unwahrscheinlich</span><span>Sehr wahrscheinlich</span></div>
+        </div>
+      )}
     </div>
   )
 }
