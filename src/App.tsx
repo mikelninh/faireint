@@ -633,7 +633,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           </div>
           <div className="border-t border-border pt-4 mt-4">
             <p className="text-xs text-ink-muted font-bold mb-1">Impressum (Angaben gem. &sect; 5 TMG)</p>
-            <p className="text-xs text-ink-muted">Michael Ninh &middot; Kontakt: <a href="https://github.com/mikelninh/faireint/issues" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">GitHub Issues</a> &middot; <a href="https://www.linkedin.com/in/mikelninh/" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">LinkedIn</a></p>
+            <p className="text-xs text-ink-muted">Michael Ninh &middot; Kontakt: <a href="https://github.com/mikelninh/faireint/issues" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">GitHub Issues</a> &middot; <a href="https://www.linkedin.com/in/michael-ninh/" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">LinkedIn</a></p>
             <p className="text-xs text-ink-muted mt-1">MIT Lizenz &middot; Demokratie sollte Open Source sein.</p>
           </div>
         </div>
