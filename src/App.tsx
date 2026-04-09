@@ -203,12 +203,27 @@ export default function App() {
           <p className="text-ink-muted">Kurze Antwort: Ja. Wir geben mehr für die Folgen von Ungleichheit aus als die Lösung kosten würde.</p>
         </div>
         <div className="grid sm:grid-cols-3 gap-4 mb-6">
-          <Card><p className="text-3xl font-display text-red">€{Math.round(totalCost)} Mrd.</p><p className="text-ink-soft">Investition pro Jahr</p><p className="text-xs text-ink-muted mt-1">= €{Math.round(totalCost / 83 * 1000 / 12)}/Bürger/Monat</p></Card>
-          <Card><p className="text-3xl font-display text-green">€{Math.round(totalSaving)} Mrd.</p><p className="text-ink-soft">Ersparnis + Einnahmen</p><p className="text-xs text-ink-muted mt-1">= €{Math.round(totalSaving / 83 * 1000 / 12)}/Bürger/Monat</p></Card>
-          <Card className="border-gold/20 bg-gold-light"><p className="text-3xl font-display text-gold">+€{Math.round(netGain)} Mrd.</p><p className="text-ink-soft">Nettogewinn pro Jahr</p><p className="text-xs text-ink-muted mt-1">= +€{Math.round(netGain / 83 * 1000 / 12)}/Bürger/Monat</p></Card>
+          <Card>
+            <p className="text-3xl font-display text-red">€{Math.round(totalCost)} Mrd.</p>
+            <p className="text-ink-soft">Investition pro Jahr</p>
+            <p className="text-xs text-ink-muted mt-1">ca. €{Math.round(totalCost / 83 * 1000 / 12)} pro Bürger pro Monat</p>
+          </Card>
+          <Card>
+            <p className="text-3xl font-display text-green">€{Math.round(totalSaving)} Mrd.</p>
+            <p className="text-ink-soft">Ersparnis + Einnahmen</p>
+            <p className="text-xs text-ink-muted mt-1">ca. €{Math.round(totalSaving / 83 * 1000 / 12)} pro Bürger pro Monat</p>
+          </Card>
+          <Card className="border-gold/20 bg-gold-light">
+            <p className="text-3xl font-display text-gold">+€{Math.round(netGain)} Mrd.</p>
+            <p className="text-ink-soft">Nettogewinn pro Jahr</p>
+            <p className="text-xs text-ink-muted mt-1">ca. +€{Math.round(netGain * 1000 / 83)} pro Bürger pro Jahr</p>
+          </Card>
         </div>
-        <Card className="mb-10 bg-blue-light border-blue/10">
+        <Card className="mb-4 bg-blue-light border-blue/10">
           <p className="text-sm text-ink-soft text-center"><strong>Zum Vergleich:</strong> Die Energiekrise 2022-2023 hat Deutschland über <strong>€100 Mrd.</strong> für Gaspreisbremse und Tankrabatt gekostet — an einem Wochenende beschlossen. Alle unsere Reformen zusammen kosten weniger als das. Der Unterschied: sie wirken dauerhaft.</p>
+        </Card>
+        <Card className="mb-10 bg-bg-alt border-border/50">
+          <p className="text-xs text-ink-muted text-center"><strong>Hinweis zur Methodik:</strong> Die Ersparnisse sind Modellschätzungen auf Basis von OECD-, WHO- und IMF-Studien. Reale Werte hängen von Umsetzung, Zeitraum und Wechselwirkungen ab. Konservatives Szenario: ca. 60% der geschätzten Ersparnis. Alle Einzelberechnungen sind im Code offen einsehbar.</p>
         </Card>
         <div className="grid sm:grid-cols-2 gap-4">
           {costs.map((c, i) => {
@@ -513,10 +528,10 @@ export default function App() {
         </div>
 
         <Card className="max-w-xs mx-auto text-left mb-8">
-          <div className="flex justify-between mb-1"><span className="text-ink-muted text-sm">Investition</span><span className="font-display text-red">€{Math.round(totalCost)} Mrd.</span></div>
-          <div className="flex justify-between mb-1"><span className="text-ink-muted text-sm">Ersparnis</span><span className="font-display text-green">€{Math.round(totalSaving)} Mrd.</span></div>
-          <div className="border-t border-border pt-2 mt-2 flex justify-between"><span className="font-bold">Nettogewinn</span><span className="font-display text-gold text-xl">+€{Math.round(netGain)} Mrd.</span></div>
-          <p className="text-xs text-ink-muted mt-2 text-center">= +€{Math.round(netGain / 83 * 1000 / 12)} pro Bürger pro Monat</p>
+          <div className="flex justify-between mb-1"><span className="text-ink-muted text-sm">Investition</span><span className="font-display text-red">€{Math.round(totalCost)} Mrd./Jahr</span></div>
+          <div className="flex justify-between mb-1"><span className="text-ink-muted text-sm">Ersparnis</span><span className="font-display text-green">€{Math.round(totalSaving)} Mrd./Jahr</span></div>
+          <div className="border-t border-border pt-2 mt-2 flex justify-between"><span className="font-bold">Nettogewinn</span><span className="font-display text-gold text-xl">+€{Math.round(netGain)} Mrd./Jahr</span></div>
+          <p className="text-xs text-ink-muted mt-2 text-center">ca. +€{Math.round(netGain * 1000 / 83)} pro Bürger pro Jahr</p>
         </Card>
         <p className="text-sm text-ink-muted max-w-md mx-auto">Alle Zahlen sind Vorschläge auf Basis internationaler Evidenz &mdash; keine beschlossenen Gesetze. Quellen und Berechnungen sind offen einsehbar.</p>
       </section>
