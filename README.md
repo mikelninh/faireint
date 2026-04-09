@@ -81,3 +81,17 @@ OECD, WHO, IMF, Bundesbank, Eurostat, World Inequality Database, UBS Global Weal
 Alle Inhalte sind Vorschläge auf Basis internationaler Evidenz — keine beschlossenen Gesetze.
 
 MIT Lizenz — Demokratie sollte Open Source sein.
+
+## Ökosystem — Digitale Demokratie
+
+Dieses Projekt ist Teil eines Open-Source-Ökosystems für digitale Demokratie:
+
+| Projekt | Frage | Link |
+|---------|-------|------|
+| **FairEint** | Was sollte Deutschland anders machen? | [GitHub](https://github.com/mikelninh/faireint) · [Live](https://mikelninh.github.io/faireint/) |
+| **GitLaw** | Was steht im Gesetz? | [GitHub](https://github.com/mikelninh/gitlaw) · [Live](https://mikelninh.github.io/gitlaw/) |
+| **Public Money Mirror** | Wohin fließt das Steuergeld? | [GitHub](https://github.com/mikelninh/Public-Money-Mirror) |
+| **SafeVoice** | Wer wird online angegriffen? | [GitHub](https://github.com/mikelninh/safevoice) |
+
+Alle Projekte: [github.com/mikelninh](https://github.com/mikelninh) · Unterstützen: [Ko-fi](https://ko-fi.com/mikel777) · [GitHub Sponsors](https://github.com/sponsors/mikelninh)
+
