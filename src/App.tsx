@@ -60,7 +60,21 @@ export default function App() {
     setTimeout(() => setToast(null), 3000)
   }
 
+  // Lightweight anonymous analytics — no cookies, no PII, just counts
+  function trackAction(action: string) {
+    try {
+      const key = `faireint_${action}`
+      const count = parseInt(localStorage.getItem(key) || '0') + 1
+      localStorage.setItem(key, String(count))
+      // Global counter for display
+      const globalKey = `faireint_total_actions`
+      const total = parseInt(localStorage.getItem(globalKey) || '0') + 1
+      localStorage.setItem(globalKey, String(total))
+    } catch { /* silent */ }
+  }
+
   function share(text: string) {
+    trackAction('share')
     if (navigator.share) {
       navigator.share({ title: 'FairEint', text, url: window.location.href })
     } else {
@@ -271,7 +285,17 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <p className="text-sm text-ink-soft text-center"><strong>Zum Vergleich:</strong> Die Energiekrise 2022-2023 hat Deutschland über <strong>€100 Mrd.</strong> für Gaspreisbremse und Tankrabatt gekostet — an einem Wochenende beschlossen. Alle unsere Reformen zusammen kosten weniger als das. Der Unterschied: sie wirken dauerhaft.</p>
         </Card>
         <Card className="mb-10 bg-bg-alt border-border/50">
-          <p className="text-xs text-ink-muted text-center"><strong>Hinweis zur Methodik:</strong> Die Ersparnisse sind Modellschätzungen auf Basis von OECD-, WHO- und IMF-Studien. Reale Werte hängen von Umsetzung, Zeitraum und Wechselwirkungen ab. Konservatives Szenario: ca. 60% der geschätzten Ersparnis. Alle Einzelberechnungen sind im Code offen einsehbar.</p>
+          <p className="text-xs text-ink-muted text-center mb-3"><strong>Hinweis zur Methodik:</strong> Die Ersparnisse sind Modellschätzungen auf Basis von OECD-, WHO- und IMF-Studien. Reale Werte hängen von Umsetzung, Zeitraum und Wechselwirkungen ab. Alle Einzelberechnungen sind im <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">Quellcode</a> offen einsehbar.</p>
+          <details className="text-xs text-ink-muted">
+            <summary className="cursor-pointer font-bold hover:text-ink transition-colors">Was wir nicht wissen (ehrlich)</summary>
+            <ul className="mt-2 space-y-1 text-left pl-4">
+              <li>&bull; Wechselwirkungen zwischen Reformen sind nicht modelliert (k&ouml;nnten positiv oder negativ sein)</li>
+              <li>&bull; Zeitverz&ouml;gerung: Pr&auml;ventionsersparnisse brauchen 5-15 Jahre bis sie voll greifen</li>
+              <li>&bull; Kapitalflucht bei Verm&ouml;gensteuer: Norwegen verlor 0,5% der Steuerbasis — unklar ob DE mehr oder weniger betroffen w&auml;re</li>
+              <li>&bull; Verhaltens&auml;nderungen: Reagieren Menschen auf kostenlose Dienste wie erwartet?</li>
+              <li>&bull; Politische Umsetzbarkeit: Selbst gute Reformen k&ouml;nnen an Koalitionsverhandlungen scheitern</li>
+            </ul>
+          </details>
         </Card>
         <div className="grid sm:grid-cols-2 gap-4">
           {[...costs].sort((a, b) => b.annualSaving - a.annualSaving).map((c, i) => {
@@ -548,7 +572,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                 <p className="font-bold">Schreib deinem Abgeordneten</p>
                 <p className="text-sm text-ink-muted mt-1">Fertige Vorlage &mdash; kopieren, einfügen, abschicken. Dauert 2 Minuten.</p>
                 <div className="flex gap-2 mt-3 flex-wrap">
-                  <button onClick={() => { navigator.clipboard.writeText(letterTemplate); showToast('Brief-Vorlage kopiert! Jetzt an deinen Abgeordneten senden.') }} className="px-5 py-2.5 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+                  <button onClick={() => { navigator.clipboard.writeText(letterTemplate); trackAction('brief_copied'); showToast('Brief-Vorlage kopiert! Jetzt an deinen Abgeordneten senden.') }} className="px-5 py-2.5 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer hover:bg-gold/90 transition-colors">
                     Brief kopieren
                   </button>
                   <a href="https://www.bundestag.de/abgeordnete" target="_blank" rel="noopener noreferrer" className="inline-block px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold hover:bg-bg-alt transition-colors">
@@ -565,7 +589,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               <div>
                 <p className="font-bold">Mach ein Reel / TikTok / Story</p>
                 <p className="text-sm text-ink-muted mt-1">Zeig den Starbucks-Vergleich, den Simulator, oder den Fahrplan. Nutze <strong>#FairEint</strong> oder <strong>#Fair1</strong>. Wir reposten die besten.</p>
-                <button onClick={() => share('€4 pro Tag — weniger als ein Kaffee. So viel kostet ein faires Deutschland. faireint.de #FairEint #Fair1')} className="mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer hover:bg-bg-alt transition-colors">
+                <button onClick={() => { trackAction('reel_copied'); share('€4 pro Tag — weniger als ein Kaffee. So viel kostet ein faires Deutschland. faireint.de #FairEint #Fair1'); }} className="mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer hover:bg-bg-alt transition-colors">
                   Reel-Text kopieren
                 </button>
               </div>
@@ -623,7 +647,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                 'Vermögensteuer: nie abgeschafft, nur ausgesetzt seit 1996. Die Schweiz erhebt sie.',
                 'Universal Basic Services hat 80% Zustimmung in der Bevölkerungssimulation.',
               ].map((stat, i) => (
-                <button key={i} onClick={() => { navigator.clipboard.writeText(stat + ' — faireint.de #FairEint'); showToast('Zahl kopiert!') }}
+                <button key={i} onClick={() => { navigator.clipboard.writeText(stat + ' — faireint.de #FairEint'); trackAction('stat_copied'); showToast('Zahl kopiert!') }}
                   className="w-full text-left text-xs text-ink-muted hover:text-ink hover:bg-bg-alt p-2 rounded-lg cursor-pointer transition-colors flex items-start gap-2">
                   <Copy className="w-3 h-3 mt-0.5 shrink-0 text-gold" />
                   <span>{stat}</span>
