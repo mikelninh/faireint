@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { reforms, principles } from './data/manifesto'
-import { timeline, costs, partyReactions, generationImpact } from './data/roadmap'
+import { timeline, costs, partyReactions } from './data/roadmap'
 import { voters, satisfactionSummary } from './data/voters'
 import { partyPathTo80 } from './data/path-to-80'
 import { policyScenarios, simulatePolicy, personas } from './data/personas'
@@ -56,7 +56,7 @@ export default function App() {
         <div className="max-w-5xl mx-auto flex items-center justify-between px-5 h-14">
           <a href="#" className="font-display text-xl">Fair<span className="text-gold">Eint</span></a>
           <div className="hidden lg:flex gap-1 text-[13px]">
-            {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['menschen','Menschen'],['parteien','Parteien'],['fahrplan','Fahrplan']].map(([id, label]) => (
+            {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']].map(([id, label]) => (
               <a key={id} href={`#${id}`} className="px-3 py-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-alt transition-colors">{label}</a>
             ))}
           </div>
@@ -115,9 +115,19 @@ export default function App() {
           ))}
         </div>
         <Card className="bg-red-light border-red/10 text-center">
-          <p className="text-ink-soft text-lg">
+          <p className="text-ink-soft text-lg mb-4">
             Ungleichheit ist kein Schicksal. Sie kostet uns <strong className="text-ink">€70-110 Mrd. pro Jahr</strong> — durch verlorenes Wachstum, Krankheit und Kriminalität. Das sind <strong className="text-ink">€1.300 pro Bürger pro Jahr</strong>, die uns einfach verloren gehen.
           </p>
+          <button onClick={() => {
+            if (navigator.share) {
+              navigator.share({ title: 'FairEint', text: 'Ungleichheit kostet Deutschland €1.300 pro Bürger pro Jahr. Das muss sich ändern.', url: window.location.href })
+            } else {
+              navigator.clipboard.writeText(window.location.href)
+              alert('Link kopiert!')
+            }
+          }} className="px-4 py-2 bg-red/10 border border-red/20 rounded-xl text-sm font-bold text-red cursor-pointer hover:bg-red/20 transition-colors">
+            Diese Zahl teilen
+          </button>
         </Card>
       </Section>
 
@@ -355,63 +365,44 @@ export default function App() {
       <Section id="fahrplan" bg="bg-bg">
         <div className="text-center mb-10">
           <Tag color="blue">Der Fahrplan</Tag>
-          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Wann wird was umgesetzt?</h2>
-          <p className="text-ink-muted">Konkrete Gesetze. Konkrete Fristen. Von 2026 bis 2035.</p>
+          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Was passiert wann?</h2>
+          <p className="text-ink-muted">3 Phasen. Kein Wunschdenken — konkret was sich für dich ändert.</p>
         </div>
-        <div className="relative">
-          <div className="absolute left-4 top-6 bottom-6 w-px bg-border" />
-          <div className="space-y-5">
-            {timeline.map((step, i) => {
-              const dot = step.status === 'now' ? 'bg-red' : step.status === 'soon' ? 'bg-gold' : step.status === 'mid' ? 'bg-green' : 'bg-blue'
-              const tag = step.status === 'now' ? 'red' : step.status === 'soon' ? 'gold' : step.status === 'mid' ? 'green' : 'blue'
-              const label = step.status === 'now' ? 'Jetzt' : step.status === 'soon' ? 'Bald' : step.status === 'mid' ? '2028-29' : 'Zukunft'
-              return (
-                <div key={i} className="relative pl-12">
-                  <div className={`absolute left-2.5 top-6 w-3 h-3 rounded-full ${dot} ring-4 ring-bg`} />
-                  <Card>
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="font-display text-2xl">{step.year}</span>
-                      {step.quarter && <span className="text-ink-muted text-sm">{step.quarter}</span>}
-                      <Tag color={tag}>{label}</Tag>
-                    </div>
-                    <h3 className="font-display text-lg mb-1">{step.title}</h3>
-                    <p className="text-ink-muted text-sm mb-3">{step.description}</p>
-                    {step.laws?.map((law, j) => (
-                      <div key={j} className="flex items-start gap-2 mb-1">
-                        <CheckCircle className="w-4 h-4 text-green mt-0.5 shrink-0" />
-                        <span className="text-sm">{law}</span>
-                      </div>
-                    ))}
-                  </Card>
+        <div className="space-y-6">
+          {timeline.map((step, i) => {
+            const colors = ['border-gold/30 bg-gold-light/30', 'border-green/30 bg-green-light/30', 'border-blue/30 bg-blue-light/30']
+            const dots = ['bg-gold', 'bg-green', 'bg-blue']
+            const tags: Array<'gold' | 'green' | 'blue'> = ['gold', 'green', 'blue']
+            const labels = ['Sofort spürbar', 'Systeme ändern sich', 'Ein anderes Deutschland']
+            return (
+              <div key={i} className={`rounded-2xl border p-6 sm:p-8 ${colors[i] || ''}`}>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`w-4 h-4 rounded-full ${dots[i]}`} />
+                  <span className="font-display text-3xl">{step.year}</span>
+                  <Tag color={tags[i]}>{labels[i]}</Tag>
                 </div>
-              )
-            })}
-          </div>
+                <h3 className="font-display text-xl mb-2">{step.title}</h3>
+                <p className="text-ink-muted mb-4">{step.description}</p>
+                <div className="space-y-2">
+                  {step.laws?.map((law, j) => (
+                    <div key={j} className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-green mt-0.5 shrink-0" />
+                      <span className="text-[15px]">{law}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+        <div className="text-center mt-8">
+          <a href="#handeln" className="inline-block px-6 py-3 bg-gold text-white rounded-xl font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+            Ich will, dass das passiert &rarr;
+          </a>
         </div>
       </Section>
 
-      {/* ━━━━ 10. FÜR DICH ━━━━ */}
-      <WideSection bg="bg-bg-alt">
-        <div className="text-center mb-10">
-          <Tag color="green">Was ändert sich für dich?</Tag>
-          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Dein Leben in 3 Zeithorizonten</h2>
-          <p className="text-ink-muted">Sofort. In 5 Jahren. Lebenslang.</p>
-        </div>
-        <div className="space-y-4">
-          {generationImpact.map((p, i) => (
-            <Card key={i}>
-              <div className="flex items-center gap-3 mb-4"><span className="text-3xl">{p.emoji}</span><div><h3 className="font-display text-lg">{p.name}</h3><p className="text-sm text-ink-muted">{p.label}</p></div></div>
-              <div className="grid sm:grid-cols-3 gap-3">
-                <div className="bg-gold-light rounded-xl p-4"><Tag>Sofort</Tag><p className="text-sm text-ink-soft mt-2">{p.shortTerm}</p></div>
-                <div className="bg-green-light rounded-xl p-4"><Tag color="green">In 5 Jahren</Tag><p className="text-sm text-ink-soft mt-2">{p.longTerm}</p></div>
-                <div className="bg-blue-light rounded-xl p-4"><Tag color="blue">Lebenslang</Tag><p className="text-sm text-ink-soft mt-2">{p.lifetime}</p></div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </WideSection>
-
-      {/* ━━━━ 11. INNOVATIONEN ━━━━ */}
+      {/* ━━━━ 10. INNOVATIONEN ━━━━ */}
       <Section id="innovationen" bg="bg-bg">
         <div className="text-center mb-10">
           <Tag color="purple">Weiterdenken</Tag>
@@ -455,8 +446,8 @@ export default function App() {
         </div>
       </Section>
 
-      {/* ━━━━ 12. FINALE + CTA ━━━━ */}
-      <section className="py-20 sm:py-28 px-6 bg-bg-alt text-center">
+      {/* ━━━━ 11. FINALE + CTA ━━━━ */}
+      <section id="handeln" className="py-20 sm:py-28 px-6 bg-bg-alt text-center">
         <Heart className="w-8 h-8 text-gold mx-auto mb-8" />
         <h2 className="font-display text-3xl sm:text-4xl max-w-lg mx-auto mb-6 leading-tight">
           Jede Reform existiert bereits. <span className="text-gold">Irgendwo auf der Welt.</span>
