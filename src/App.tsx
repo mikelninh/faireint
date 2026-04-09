@@ -53,6 +53,7 @@ export default function App() {
   const [activePolicy, setActivePolicy] = useState(policyScenarios[0].id)
   const [openInnovation, setOpenInnovation] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
+  const [fontSize, setFontSize] = useState(0) // -1, 0, +1
 
   function showToast(msg: string) {
     setToast(msg)
@@ -91,17 +92,23 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
   const netGain = totalSaving - totalCost
 
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen ${fontSize === 1 ? 'text-lg' : fontSize === -1 ? 'text-sm' : ''}`}>
       {toast && <Toast message={toast} onClose={() => setToast(null)} />}
 
       {/* ── Nav ── */}
       <nav className="fixed top-0 w-full z-50 bg-bg/90 backdrop-blur-lg border-b border-border">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-5 h-14">
           <a href="#" className="font-display text-xl">Fair<span className="text-gold">Eint</span></a>
-          <div className="hidden lg:flex gap-1 text-[13px]">
-            {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']].map(([id, label]) => (
-              <a key={id} href={`#${id}`} className="px-3 py-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-alt transition-colors">{label}</a>
-            ))}
+          <div className="flex items-center gap-1">
+            <div className="hidden lg:flex gap-1 text-[13px]">
+              {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']].map(([id, label]) => (
+                <a key={id} href={`#${id}`} className="px-3 py-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-alt transition-colors">{label}</a>
+              ))}
+            </div>
+            <div className="flex items-center gap-0.5 ml-2 border-l border-border pl-2">
+              <button onClick={() => setFontSize(Math.max(-1, fontSize - 1))} className="px-2 py-1 text-xs text-ink-muted hover:text-ink cursor-pointer rounded hover:bg-bg-alt">A-</button>
+              <button onClick={() => setFontSize(Math.min(1, fontSize + 1))} className="px-2 py-1 text-sm text-ink-muted hover:text-ink cursor-pointer rounded hover:bg-bg-alt">A+</button>
+            </div>
           </div>
         </div>
       </nav>
@@ -238,23 +245,28 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Können wir uns das leisten?</h2>
           <p className="text-ink-muted">Kurze Antwort: Ja. Wir geben mehr für die Folgen von Ungleichheit aus als die Lösung kosten würde.</p>
         </div>
-        <div className="grid sm:grid-cols-3 gap-4 mb-6">
-          <Card>
-            <p className="text-3xl font-display text-red">€{Math.round(totalCost)} Mrd.</p>
-            <p className="text-ink-soft">Investition pro Jahr</p>
-            <p className="text-xs text-ink-muted mt-1">ca. €{Math.round(totalCost / 83 * 1000 / 12)} pro Bürger pro Monat</p>
-          </Card>
-          <Card>
-            <p className="text-3xl font-display text-green">€{Math.round(totalSaving)} Mrd.</p>
-            <p className="text-ink-soft">Ersparnis + Einnahmen</p>
-            <p className="text-xs text-ink-muted mt-1">ca. €{Math.round(totalSaving / 83 * 1000 / 12)} pro Bürger pro Monat</p>
-          </Card>
+        {/* Two scenarios side by side */}
+        <div className="grid sm:grid-cols-2 gap-4 mb-6">
           <Card className="border-gold/20 bg-gold-light">
-            <p className="text-3xl font-display text-gold">+€{Math.round(netGain)} Mrd.</p>
-            <p className="text-ink-soft">Nettogewinn pro Jahr</p>
-            <p className="text-xs text-ink-muted mt-1">ca. +€{Math.round(netGain * 1000 / 83)} pro Bürger pro Jahr</p>
+            <Tag color="green">Optimistisches Szenario</Tag>
+            <div className="grid grid-cols-3 gap-2 mt-3">
+              <div><p className="text-xl font-display text-red">€{Math.round(totalCost)}</p><p className="text-xs text-ink-muted">Mrd. Kosten</p></div>
+              <div><p className="text-xl font-display text-green">€{Math.round(totalSaving)}</p><p className="text-xs text-ink-muted">Mrd. Ersparnis</p></div>
+              <div><p className="text-xl font-display text-gold">+€{Math.round(netGain)}</p><p className="text-xs text-ink-muted">Mrd. Gewinn</p></div>
+            </div>
+            <p className="text-xs text-ink-muted mt-2">ca. +€{Math.round(netGain * 1000 / 83)} pro Bürger pro Jahr</p>
+          </Card>
+          <Card>
+            <Tag>Konservatives Szenario (60%)</Tag>
+            <div className="grid grid-cols-3 gap-2 mt-3">
+              <div><p className="text-xl font-display text-red">€{Math.round(totalCost)}</p><p className="text-xs text-ink-muted">Mrd. Kosten</p></div>
+              <div><p className="text-xl font-display text-green">€{Math.round(totalSaving * 0.6)}</p><p className="text-xs text-ink-muted">Mrd. Ersparnis</p></div>
+              <div><p className="text-xl font-display text-gold">+€{Math.round(totalSaving * 0.6 - totalCost)}</p><p className="text-xs text-ink-muted">Mrd. Gewinn</p></div>
+            </div>
+            <p className="text-xs text-ink-muted mt-2">ca. +€{Math.round((totalSaving * 0.6 - totalCost) * 1000 / 83)} pro Bürger pro Jahr</p>
           </Card>
         </div>
+        <p className="text-xs text-ink-muted text-center mb-6">Selbst im konservativen Szenario: die Reformen erwirtschaften mehr als sie kosten.</p>
         <Card className="mb-4 bg-blue-light border-blue/10">
           <p className="text-sm text-ink-soft text-center"><strong>Zum Vergleich:</strong> Die Energiekrise 2022-2023 hat Deutschland über <strong>€100 Mrd.</strong> für Gaspreisbremse und Tankrabatt gekostet — an einem Wochenende beschlossen. Alle unsere Reformen zusammen kosten weniger als das. Der Unterschied: sie wirken dauerhaft.</p>
         </Card>
@@ -262,7 +274,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <p className="text-xs text-ink-muted text-center"><strong>Hinweis zur Methodik:</strong> Die Ersparnisse sind Modellschätzungen auf Basis von OECD-, WHO- und IMF-Studien. Reale Werte hängen von Umsetzung, Zeitraum und Wechselwirkungen ab. Konservatives Szenario: ca. 60% der geschätzten Ersparnis. Alle Einzelberechnungen sind im Code offen einsehbar.</p>
         </Card>
         <div className="grid sm:grid-cols-2 gap-4">
-          {costs.map((c, i) => {
+          {[...costs].sort((a, b) => b.annualSaving - a.annualSaving).map((c, i) => {
             const roi = c.annualCost > 0 ? c.annualSaving / c.annualCost : c.annualSaving
             return (
               <Card key={i}>
@@ -600,8 +612,28 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             Dieses Projekt ersetzt keine wissenschaftliche Studie und keine politische Beratung.
             Es ist ein Diskussionsbeitrag &mdash; offen für Kritik, Korrekturen und Verbesserungen.
           </p>
+          <div className="border-t border-border pt-4 mt-4 mb-4">
+            <p className="text-xs text-ink-muted font-bold mb-2">Für Presse &amp; Social Media</p>
+            <p className="text-xs text-ink-muted mb-2">Die 5 wichtigsten Zahlen zum Kopieren:</p>
+            <div className="text-left space-y-1">
+              {[
+                '67% des Vermögens gehört den Top 10%. Die untere Hälfte: 1,4%.',
+                'Ungleichheit kostet Deutschland €70-110 Mrd./Jahr. Die Lösung: €30-45 Mrd.',
+                '€4 pro Bürger pro Tag. Weniger als ein Kaffee. So viel kostet ein faires Deutschland.',
+                'Vermögensteuer: nie abgeschafft, nur ausgesetzt seit 1996. Die Schweiz erhebt sie.',
+                'Universal Basic Services hat 80% Zustimmung in der Bevölkerungssimulation.',
+              ].map((stat, i) => (
+                <button key={i} onClick={() => { navigator.clipboard.writeText(stat + ' — faireint.de #FairEint'); showToast('Zahl kopiert!') }}
+                  className="w-full text-left text-xs text-ink-muted hover:text-ink hover:bg-bg-alt p-2 rounded-lg cursor-pointer transition-colors flex items-start gap-2">
+                  <Copy className="w-3 h-3 mt-0.5 shrink-0 text-gold" />
+                  <span>{stat}</span>
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="border-t border-border pt-4 mt-4">
-            <p className="text-xs text-ink-muted">Kontakt: <a href="https://github.com/mikelninh/faireint/issues" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">GitHub Issues</a> &middot; <a href="https://www.linkedin.com/in/mikelninh/" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">LinkedIn</a></p>
+            <p className="text-xs text-ink-muted font-bold mb-1">Impressum (Angaben gem. &sect; 5 TMG)</p>
+            <p className="text-xs text-ink-muted">Mikel Nguyen &middot; Kontakt: <a href="https://github.com/mikelninh/faireint/issues" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">GitHub Issues</a> &middot; <a href="https://www.linkedin.com/in/mikelninh/" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">LinkedIn</a></p>
             <p className="text-xs text-ink-muted mt-1">MIT Lizenz &middot; Demokratie sollte Open Source sein.</p>
           </div>
         </div>
