@@ -250,6 +250,32 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         { label: 'Schutz', value: 82, color: 'bg-gold' },
         { label: 'Zukunft', value: 76, color: 'bg-purple' },
       ]
+  const heroMode = topView === 'politik'
+    ? {
+        eyebrow: 'Fuer Politik',
+        title: 'Was traegt, was blockiert, was kann man noch in dieser Legislatur tun?',
+        body: 'Eine gefuehrte Lesart fuer Teams, Fraktionen und Ministerien: Empfehlung, Widerstand und erste Schritte in einer Linie.',
+        primary: { href: '#simulator', label: 'Empfohlenes Paket prüfen' },
+        secondary: { href: '#fahrplan', label: '100 Tage ansehen' },
+      }
+    : {
+        eyebrow: 'Fuer Buerger:innen',
+        title: 'Was wird fuer mich leichter, gerechter und bis 2030 spuerbar besser?',
+        body: 'Eine gefuehrte Lesart fuer Menschen im Alltag: Entlastung, Schutz und echte Veraenderung statt abstrakter Politik.',
+        primary: { href: '#wallet', label: 'Alltag ansehen' },
+        secondary: { href: '#simulator', label: 'Paket verstehen' },
+      }
+  const landingPanels = topView === 'politik'
+    ? [
+        { kicker: '1 Empfehlung', title: 'Vermoegenspaket als Hauptspur', body: 'Das Paket verbindet den groessten Return mit der klarsten Mehrheit bei Buerger:innen.' },
+        { kicker: '1 Konflikt', title: 'Mitte schuetzen, Top-Vermoegen belasten', body: 'Die politische Kernarbeit ist nicht das Ziel, sondern das Framing und der Schutz gewoehnlicher Vermoegen.' },
+        { kicker: '1 Test', title: 'Wird der Alltag schnell besser?', body: 'Ohne sichtbare Entlastung in Kita, Schulessen und Mobilitaet verliert das Paket Traktion.' },
+      ]
+    : [
+        { kicker: '1 Nutzen', title: 'Weniger Kosten im Alltag', body: 'Kita, Schulessen, Mobilitaet und digitale Basisdienste senken den Monatsdruck sichtbar.' },
+        { kicker: '1 Sicherheit', title: 'Normale Leute bleiben geschuetzt', body: 'Familienheim, kleine Erbschaften und kleine Betriebe sollen nicht die Hauptlast tragen.' },
+        { kicker: '1 Hoffnung', title: '2030 soll sich anders anfuehlen', body: 'Weniger Stress, weniger Antraege, mehr Gesundheit, mehr Freiheit und mehr Sicherheit im Alltag.' },
+      ]
   const navLinks = topView === 'politik'
     ? [['problem','Problem'],['simulator','Pakete'],['vision2030','2030'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']]
     : [['problem','Problem'],['simulator','Pakete'],['vision2030','2030'],['menschen','Menschen'],['wallet','Alltag'],['fahrplan','Fahrplan'],['handeln','Handeln']]
@@ -286,17 +312,44 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
 
       {/* ━━━━ 1. HERO ━━━━ */}
       <header className="min-h-[62vh] flex flex-col items-center justify-center px-6 text-center pt-18 bg-bg">
-        <div className="max-w-2xl mx-auto fade-in">
+        <div className="max-w-3xl mx-auto fade-in">
+          <div className="flex justify-center mb-5">
+            <div className="inline-flex bg-bg-card border border-border rounded-2xl p-1.5 gap-1.5 soft-pill">
+              <button
+                onClick={() => setTopView('politik')}
+                className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press transition-colors ${topView === 'politik' ? 'bg-gold text-white shadow-sm' : 'text-ink-muted hover:text-ink hover:bg-bg-alt'}`}
+              >
+                Politiker-Ansicht
+              </button>
+              <button
+                onClick={() => setTopView('buerger')}
+                className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press transition-colors ${topView === 'buerger' ? 'bg-blue text-white shadow-sm' : 'text-ink-muted hover:text-ink hover:bg-bg-alt'}`}
+              >
+                Buerger-Ansicht
+              </button>
+            </div>
+          </div>
+          <p className={`text-xs uppercase tracking-[0.22em] font-bold mb-4 ${topView === 'politik' ? 'text-gold' : 'text-blue'}`}>{heroMode.eyebrow}</p>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mb-6 tracking-tight">
             Einigkeit. Und <span className="text-gold">Recht</span>. Und <span className="text-gold">Freiheit</span>.
           </h1>
           <p className="text-xl sm:text-2xl text-ink-soft leading-relaxed mb-4">
             Aber Einigkeit funktioniert nur, wenn sie <strong>fair</strong> ist.
           </p>
-          <p className="text-ink-muted mb-8">FairEint zeigt ein Zielbild, das beste Paket und die ersten Schritte, damit es politisch tragbar und im Alltag spuerbar wird.</p>
+          <p className="font-display text-2xl sm:text-3xl leading-tight mb-4">{heroMode.title}</p>
+          <p className="text-ink-muted max-w-2xl mx-auto mb-8">{heroMode.body}</p>
+
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            <a href={heroMode.primary.href} className={`px-5 py-3 rounded-xl text-sm font-bold text-white ${topView === 'politik' ? 'bg-gold hover:bg-gold/90' : 'bg-blue hover:bg-blue/90'} transition-colors`}>
+              {heroMode.primary.label}
+            </a>
+            <a href={heroMode.secondary.href} className="px-5 py-3 rounded-xl text-sm font-bold bg-bg-card border border-border hover:bg-bg-alt transition-colors">
+              {heroMode.secondary.label}
+            </a>
+          </div>
 
           {/* The killer comparison */}
-          <div className="max-w-md mx-auto mb-9 fade-in-delay bg-bg-card rounded-2xl border border-border p-5">
+          <div className="max-w-md mx-auto mb-9 fade-in-delay bg-bg-card rounded-2xl border border-border p-5 soft-pill glass-card">
             <div className="flex items-center justify-center gap-4 sm:gap-6 mb-3">
               <div className="text-center">
                 <p className="text-2xl sm:text-3xl font-display text-red">€70-110 Mrd.</p>
@@ -323,21 +376,14 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Zwei Einstiege. Eine Richtung.</h2>
           <p className="text-ink-muted">Je nach Blickwinkel beginnt FairEint mit einer anderen Frage: Kann das passieren, oder wuerde ich das fuer mich und mein Umfeld sofort wollen?</p>
         </div>
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex bg-bg-card border border-border rounded-2xl p-1.5 gap-1.5 soft-pill">
-            <button
-              onClick={() => setTopView('politik')}
-              className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press transition-colors ${topView === 'politik' ? 'bg-gold text-white shadow-sm' : 'text-ink-muted hover:text-ink hover:bg-bg-alt'}`}
-            >
-              Politiker-Ansicht
-            </button>
-            <button
-              onClick={() => setTopView('buerger')}
-              className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press transition-colors ${topView === 'buerger' ? 'bg-blue text-white shadow-sm' : 'text-ink-muted hover:text-ink hover:bg-bg-alt'}`}
-            >
-              Buerger-Ansicht
-            </button>
-          </div>
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          {landingPanels.map((panel, index) => (
+            <div key={panel.title} className={`rounded-[1.5rem] p-5 border glass-card ${index === 0 ? (topView === 'politik' ? 'bg-gold-light border-gold/20' : 'bg-blue-light border-blue/20') : 'bg-bg-card border-border'}`}>
+              <p className={`text-xs uppercase tracking-wider font-bold mb-2 ${index === 0 ? (topView === 'politik' ? 'text-gold' : 'text-blue') : 'text-ink-muted'}`}>{panel.kicker}</p>
+              <h3 className="font-display text-2xl leading-tight mb-2">{panel.title}</h3>
+              <p className="text-sm text-ink-soft">{panel.body}</p>
+            </div>
+          ))}
         </div>
         <div className={`mb-6 rounded-[2rem] p-4 sm:p-5 editorial-shell ${topView === 'politik' ? 'border border-gold/10' : 'border border-blue/10'}`}>
           <div className="flex items-start justify-between gap-4 flex-wrap px-2 sm:px-3 pt-1 pb-4">
