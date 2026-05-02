@@ -497,6 +497,16 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Können wir uns das leisten?</h2>
           <p className="text-ink-muted">Kurze Antwort: Ja. Wir geben mehr für die Folgen von Ungleichheit aus als die Lösung kosten würde.</p>
         </div>
+        <Card className="mb-6 bg-bg-card border-border/60">
+          <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-2">
+            {topView === 'politik' ? 'Warum dieser Block fuer Politik wichtig ist' : 'Warum dieser Block fuer Buerger:innen wichtig ist'}
+          </p>
+          <p className="text-sm text-ink-soft">
+            {topView === 'politik'
+              ? 'Hier sieht man sofort, ob ein Paket haushaltspolitisch tragfaehig ist oder nur gut klingt.'
+              : 'Hier sieht man, warum diese Reformen kein Luxusprojekt sind, sondern reale Entlastung finanzieren koennen.'}
+          </p>
+        </Card>
         <Card className="mb-6 bg-bg-alt border-border/60">
           <div className="grid sm:grid-cols-4 gap-3 text-center">
             <div>
@@ -605,6 +615,16 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Wer stimmt zu und wer blockiert?</h2>
           <p className="text-ink-muted">FairEint simuliert getrennt, wie {citizenPersonaCount} B&uuml;rger-Personas und {politicalBlocCount} politische Lager reagieren &mdash; plus was die Reform netto bringt.</p>
         </div>
+        <Card className="mb-6 bg-bg-card border-border/60">
+          <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-2">
+            {topView === 'politik' ? 'Fokusmodus Politik' : 'Fokusmodus Buerger:innen'}
+          </p>
+          <p className="text-sm text-ink-soft">
+            {topView === 'politik'
+              ? 'Das ist der Kernblock fuer Politik: Zustimmung, Gegenwehr und Netto-Return in einer Ansicht.'
+              : 'Das ist der Kernblock fuer Buerger:innen, wenn du sehen willst, ob ein Paket nur schoen klingt oder auch bei echten Leuten ankommt.'}
+          </p>
+        </Card>
         <Card className="mb-6 bg-bg-card border-border/60">
           <div className="grid sm:grid-cols-4 gap-3 text-center">
             <div><p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Buerger:innen</p><p className="text-sm text-ink-soft">Wie der Alltag die Zustimmung treibt oder bremst</p></div>
@@ -855,7 +875,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </WideSection>
 
       {/* ━━━━ 8. MENSCHEN ━━━━ */}
-      <WideSection id="menschen" bg="bg-bg" label="Wählerprofile">
+      {topView === 'buerger' && <WideSection id="menschen" bg="bg-bg" label="Wählerprofile">
         <div className="text-center mb-10">
           <Tag>8 Wählerprofile</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">
@@ -916,10 +936,10 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             </div>
           </div>
         ))}
-      </WideSection>
+      </WideSection>}
 
       {/* ━━━━ 9. PARTEIEN ━━━━ */}
-      <WideSection id="parteien" bg="bg-bg-alt" label="Parteien-Check">
+      {topView === 'politik' && <WideSection id="parteien" bg="bg-bg-alt" label="Parteien-Check">
         <div className="text-center mb-10">
           <Tag color="blue">Parteien-Check</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Können die Parteien zustimmen?</h2>
@@ -948,7 +968,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             </Card>
           ))}
         </div>
-      </WideSection>
+      </WideSection>}
 
       {/* ━━━━ FAQ / GEGENARGUMENTE ━━━━ */}
       <Section bg="bg-bg">
@@ -978,7 +998,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </Section>
 
       {/* ━━━━ UBS WALLET DEMO ━━━━ */}
-      <Section id="wallet" bg="bg-bg-alt" label="UBS-Wallet">
+      {topView === 'buerger' && <Section id="wallet" bg="bg-bg-alt" label="UBS-Wallet">
         <div className="text-center mb-10">
           <Tag color="green">So fühlt sich UBS an</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Dein UBS-Wallet</h2>
@@ -1081,7 +1101,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           </button>
           <p className="text-xs text-ink-muted mt-3">Zeig es deiner Familie, deinen Freunden, deiner Omi.</p>
         </div>
-      </Section>
+      </Section>}
 
       {/* ━━━━ 9. FAHRPLAN ━━━━ */}
       <Section id="fahrplan" bg="bg-bg" label="Fahrplan">
@@ -1090,6 +1110,16 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Was passiert wann?</h2>
           <p className="text-ink-muted">3 Phasen. Kein Wunschdenken — konkret was sich für dich ändert.</p>
         </div>
+        <Card className="mb-6 bg-bg-card border-border/60">
+          <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-2">
+            {topView === 'politik' ? 'Fokusmodus Politik' : 'Fokusmodus Buerger:innen'}
+          </p>
+          <p className="text-sm text-ink-soft">
+            {topView === 'politik'
+              ? 'Hier zaehlt die Umsetzungslogik: was kommt 2026, was ist realistisch, was muss zuerst beschlossen werden.'
+              : 'Hier wird aus Politik eine Zeitlinie: wann du Entlastung, einfachere Services und echte Veraenderung spueren wuerdest.'}
+          </p>
+        </Card>
         <div className="space-y-6">
           {timeline.map((step, i) => {
             const colors = ['border-gold bg-gold-light', 'border-green bg-green-light', 'border-blue bg-blue-light']
