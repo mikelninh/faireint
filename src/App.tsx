@@ -62,6 +62,7 @@ function barColorClass(approval: number) {
 
 export default function App() {
   const [mobileMenu, setMobileMenu] = useState(false)
+  const [topView, setTopView] = useState<'politik' | 'buerger'>('politik')
   const [showAllCosts, setShowAllCosts] = useState(false)
   const [openReform, setOpenReform] = useState<string | null>(null)
   const [openVoter, setOpenVoter] = useState<string | null>(null)
@@ -166,6 +167,28 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
   const netGain = totalSaving - totalCost
   const flagshipScenario = policyScenarios.find((scenario) => scenario.id === 'vermoegenspaket') ?? policyScenarios[0]
   const flagshipMetrics = getPolicyMetrics(flagshipScenario.id)
+  const topViewCards = topView === 'politik'
+    ? [
+        { kicker: 'Empfehlung', title: flagshipScenario.title, body: `Das staerkste Paket derzeit: ${flagshipMetrics.citizenApproval}% Buerger:innen, ${flagshipMetrics.politicianApproval}% Politik, €${flagshipMetrics.netReturn} Mrd. netto pro Jahr.` },
+        { kicker: 'Knackpunkt', title: 'Passbar statt nur beliebt', body: 'Erbschaftsschlupfloecher schliessen, Mittelstand schuetzen, Entlastung unten sofort sichtbar machen.' },
+        { kicker: 'Naechster Schritt', title: 'Erste 100 Tage', body: 'Buendelgesetz, Schutzregeln fuer Wohneigentum und Familienbetriebe, Zukunftsfonds und klare Entlastungs-Kommunikation.' },
+      ]
+    : [
+        { kicker: 'Im Alltag', title: 'Was du direkt merken wuerdest', body: 'Schulessen, Kita, Mobilitaet, Pflege und digitale Dienste werden einfacher oder billiger statt immer komplizierter.' },
+        { kicker: 'Fairness', title: 'Wer mehr traegt', body: 'Normale Erben, Familienheime und kleine Betriebe sollen geschuetzt bleiben. Sehr grosse Vermoegen und Schlupfloecher tragen mehr.' },
+        { kicker: 'Warum das zaehlt', title: 'Weniger Stress, mehr Freiheit', body: 'Weniger Armut, weniger Buerokratie, bessere Gesundheit und mehr Sicherheit im Alltag statt nur schoener Reformsprache.' },
+      ]
+  const topViewActions = topView === 'politik'
+    ? [
+        { href: '#simulator', label: 'Passability ansehen' },
+        { href: '#rechnung', label: 'Kostenlogik pruefen' },
+        { href: '#fahrplan', label: 'Umsetzung lesen' },
+      ]
+    : [
+        { href: '#wallet', label: 'Alltagseffekt ansehen' },
+        { href: '#reformen', label: 'Reformen verstehen' },
+        { href: '#vision2030', label: '2030 fuehlen' },
+      ]
 
   return (
     <div className={`min-h-screen ${fontSize === 1 ? 'text-lg' : fontSize === -1 ? 'text-sm' : ''}`}>
@@ -233,9 +256,58 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       <WideSection bg="bg-bg-alt" label="So funktioniert FairEint">
         <div className="text-center mb-10">
           <Tag>Ueberblick</Tag>
-          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Ein klares Warum, Wie und Was</h2>
-          <p className="text-ink-muted">Die Seite ist gross. Deshalb hier der kurze Pfad: erst das Ziel, dann die Reform, dann die Simulation, dann die Umsetzung.</p>
+          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Zwei Einstiege. Eine Richtung.</h2>
+          <p className="text-ink-muted">Je nach Blickwinkel beginnt FairEint mit einer anderen Frage: Kann das passieren, oder wuerde ich das fuer mich und mein Umfeld sofort wollen?</p>
         </div>
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex bg-bg-card border border-border rounded-2xl p-1 gap-1">
+            <button
+              onClick={() => setTopView('politik')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press transition-colors ${topView === 'politik' ? 'bg-gold text-white' : 'text-ink-muted hover:text-ink'}`}
+            >
+              Politiker-Ansicht
+            </button>
+            <button
+              onClick={() => setTopView('buerger')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press transition-colors ${topView === 'buerger' ? 'bg-blue text-white' : 'text-ink-muted hover:text-ink'}`}
+            >
+              Buerger-Ansicht
+            </button>
+          </div>
+        </div>
+        <Card className={`mb-6 ${topView === 'politik' ? 'border-gold/20' : 'border-blue/20'}`}>
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div className="max-w-2xl">
+              <p className={`text-xs uppercase tracking-widest font-bold mb-2 ${topView === 'politik' ? 'text-gold' : 'text-blue'}`}>
+                {topView === 'politik' ? 'Ultra-kompakt fuer Politik' : 'Ultra-kompakt fuer Buerger:innen'}
+              </p>
+              <h3 className="font-display text-2xl mb-2">
+                {topView === 'politik' ? 'Welche Reform traegt, was bringt sie und wo scheitert sie?' : 'Was wird billiger, fairer und freier in meinem Alltag?'}
+              </h3>
+              <p className="text-sm text-ink-muted">
+                {topView === 'politik'
+                  ? 'Diese Sicht komprimiert FairEint auf Passability, Netto-Return, Koalitionsfaehigkeit und erste Umsetzungsschritte.'
+                  : 'Diese Sicht komprimiert FairEint auf Lebensrealitaet, Entlastung, Schutz vor Ueberforderung und sichtbare Verbesserungen bis 2030.'}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {topViewActions.map((action) => (
+                <a key={action.href} href={action.href} className="px-4 py-2 rounded-xl bg-bg-alt border border-border text-sm font-bold hover:bg-bg transition-colors">
+                  {action.label}
+                </a>
+              ))}
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-3 mt-5">
+            {topViewCards.map((card) => (
+              <div key={card.title} className="bg-bg-alt rounded-xl p-4">
+                <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">{card.kicker}</p>
+                <h4 className="font-display text-lg mb-2">{card.title}</h4>
+                <p className="text-sm text-ink-soft">{card.body}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
         <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <Card>
             <p className="text-xs uppercase tracking-widest text-gold font-bold mb-2">Warum</p>
