@@ -76,6 +76,8 @@ export default function App() {
   const [fontSize, setFontSize] = useState(0) // -1, 0, +1
   const [showNPS, setShowNPS] = useState(false)
   const [npsSubmitted, setNpsSubmitted] = useState(false)
+  const [showClarity, setShowClarity] = useState(false)
+  const [claritySubmitted, setClaritySubmitted] = useState(false)
   const [openFAQ, setOpenFAQ] = useState<number | null>(null)
   const reformCount = reforms.length
   const scenarioCount = policyScenarios.length
@@ -85,6 +87,8 @@ export default function App() {
   const backcastGoalCount = backcastGoals.length
   // Return visitor tracking + NPS timer
   useEffect(() => {
+    let clarityTimer: ReturnType<typeof setTimeout> | null = null
+    let npsTimer: ReturnType<typeof setTimeout> | null = null
     try {
       const visits = parseInt(localStorage.getItem('faireint_visits') || '0') + 1
       localStorage.setItem('faireint_visits', String(visits))
@@ -92,11 +96,20 @@ export default function App() {
       if (visits > 1) trackAction('return_visit')
     } catch { /* silent */ }
 
-    // Show NPS after 90 seconds if not submitted before
+    const clarityDone = localStorage.getItem('faireint_clarity_done')
+    if (!clarityDone) {
+      clarityTimer = setTimeout(() => setShowClarity(true), 25000)
+    }
+
+    // Show NPS late enough that it does not interrupt first comprehension
     const alreadySubmitted = localStorage.getItem('faireint_nps_done')
     if (!alreadySubmitted) {
-      const timer = setTimeout(() => setShowNPS(true), 90000)
-      return () => clearTimeout(timer)
+      npsTimer = setTimeout(() => setShowNPS(true), 150000)
+    }
+
+    return () => {
+      if (clarityTimer) clearTimeout(clarityTimer)
+      if (npsTimer) clearTimeout(npsTimer)
     }
   }, [])
 
@@ -178,23 +191,23 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
     ? {
         eyebrow: 'Ultra-kompakt fuer Politik',
         title: '1 Paket. 3 Risiken. 3 Massnahmen.',
-        body: 'Die schnellste Lesart fuer Politik: was sich lohnt, was blockiert und was man in den ersten 100 Tagen tun muss.',
+        body: 'Empfehlung, Widerstand und erste 100 Tage in einer Lesart.',
       }
     : {
         eyebrow: 'Ultra-kompakt fuer Buerger:innen',
         title: 'Was spare ich, was wird leichter, was bleibt geschuetzt?',
-        body: 'Die schnellste Lesart fuer Buerger:innen: was sich im Alltag veraendert, wer entlastet wird und welche Sicherheiten bestehen bleiben.',
+        body: 'Alltagseffekt, Schutz und Entlastung in einer Lesart.',
       }
   const topViewCards = topView === 'politik'
     ? [
-        { kicker: 'Empfohlenes Paket', title: flagshipScenario.title, body: `${flagshipMetrics.citizenApproval}% Buerger:innen, ${flagshipMetrics.politicianApproval}% Politik, €${flagshipMetrics.netReturn} Mrd. netto pro Jahr.` },
-        { kicker: '3 Risiken', title: 'Woran es scheitern kann', body: '1. Angst vor Mittelstandsbelastung. 2. Framing als Neidsteuer. 3. Zu grosses Paket ohne schnelle Alltagseffekte.' },
-        { kicker: '3 Massnahmen', title: 'Wie es passbar wird', body: '1. Familienheim und kleine Betriebe schuetzen. 2. Erbschaftsschlupfloecher zuerst. 3. Entlastung durch Kita, Schulessen und Mobilitaet sofort sichtbar machen.' },
+        { kicker: 'Empfohlenes Paket', title: flagshipScenario.title, body: `${flagshipMetrics.citizenApproval}% Buerger:innen, ${flagshipMetrics.politicianApproval}% Politik, €${flagshipMetrics.netReturn} Mrd. netto pro Jahr.`, bullets: ['Hoher Netto-Return', 'Mehrheit bei Buerger:innen', 'Politisch noch formbar'] },
+        { kicker: '3 Risiken', title: 'Woran es scheitern kann', body: 'Die Gegnerstory ist vorhersehbar. Sie muss vor dem Gesetzestext entkraeftet werden.', bullets: ['Mittelstandsangst', 'Neidsteuer-Frame', 'Zu abstrakte Nutzenstory'] },
+        { kicker: '3 Massnahmen', title: 'Wie es passbar wird', body: 'Das Paket gewinnt, wenn der Alltag zuerst und die Ideologie zuletzt sichtbar ist.', bullets: ['Familienheim schuetzen', 'Schlupfloecher zuerst', 'Kita + Schulessen sofort zeigen'] },
       ]
     : [
-        { kicker: 'Was spare ich?', title: 'Weniger Fixkosten', body: 'Schulessen, Kita, Mobilitaet und digitale Basisdienste druecken laufende Monatskosten statt nur Einmalhilfen zu verteilen.' },
-        { kicker: 'Was wird einfacher?', title: 'Weniger Antraege, weniger Stress', body: 'Mehr Leistungen kommen automatisch oder universell. Weniger Behoerdenchaos, kuerzere Wege, weniger Stigma.' },
-        { kicker: 'Was bleibt geschuetzt?', title: 'Normale Leute sollen nicht zahlen', body: 'Familienheim, kleine Erbschaften und kleine Betriebe bleiben geschuetzt. Mehr tragen sehr grosse Vermoegen und Schlupfloecher.' },
+        { kicker: 'Was spare ich?', title: 'Weniger Fixkosten', body: 'Schulessen, Kita, Mobilitaet und digitale Basisdienste druecken laufende Monatskosten.', bullets: ['Weniger Monatsdruck', 'Mehr frei verfuegbares Geld', 'Sofort statt spaeter'] },
+        { kicker: 'Was wird einfacher?', title: 'Weniger Antraege, weniger Stress', body: 'Mehr Leistungen kommen automatisch oder universell. Weniger Reibung, weniger Stigma.', bullets: ['Weniger Formulare', 'Mehr Automatik', 'Kuerzere Wege'] },
+        { kicker: 'Was bleibt geschuetzt?', title: 'Normale Leute sollen nicht zahlen', body: 'Familienheim, kleine Erbschaften und kleine Betriebe bleiben geschuetzt.', bullets: ['Haus bleibt geschuetzt', 'Kleine Erben bleiben geschuetzt', 'Top-Vermoegen zahlen mehr'] },
       ]
   const topViewActions = topView === 'politik'
     ? [
@@ -243,7 +256,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       {toast && <Toast message={toast} onClose={() => setToast(null)} />}
 
       {/* ── Nav ── */}
-      <nav className="fixed top-0 w-full z-50 bg-bg/90 backdrop-blur-lg border-b border-border">
+      <nav className="fixed top-0 w-full z-50 bg-bg/96 border-b border-border shadow-[0_1px_0_rgba(0,0,0,0.03)]">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-5 h-14">
           <a href="#" className="font-display text-xl">Fair<span className="text-gold">Eint</span></a>
           <div className="flex items-center gap-1">
@@ -260,7 +273,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           </div>
         </div>
         {mobileMenu && (
-          <div className="lg:hidden border-t border-border bg-bg/95 backdrop-blur-lg px-5 py-3 flex flex-col gap-1 animate-slide-up">
+          <div className="lg:hidden border-t border-border bg-bg px-5 py-3 flex flex-col gap-1 animate-slide-up">
             {navLinks.map(([id, label]) => (
               <a key={id} href={`#${id}`} onClick={() => setMobileMenu(false)} className="px-3 py-2 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-alt transition-colors text-sm">{label}</a>
             ))}
@@ -296,7 +309,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           </div>
 
           <a href="#problem" className="text-gold text-sm hover:underline">
-            Was genau ist das Problem? <ChevronDown className="w-4 h-4 inline ml-1 animate-bounce" />
+            Was genau ist das Problem? <ChevronDown className="w-4 h-4 inline ml-1" />
           </a>
         </div>
       </header>
@@ -392,11 +405,12 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                     </span>
                   </div>
                   <h4 className="font-display text-2xl leading-tight mb-3">{card.title}</h4>
+                  <p className="text-base text-ink-soft mb-3">{card.body}</p>
                   <div className="space-y-2">
-                    {card.body.split(/(?<=\.)\s+/).filter(Boolean).map((line, lineIndex) => (
+                    {card.bullets.map((line, lineIndex) => (
                       <div key={lineIndex} className="flex items-start gap-2">
                         <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${index === 0 ? 'bg-red' : 'bg-green'}`} />
-                        <p className="text-base text-ink-soft">{line.trim()}</p>
+                        <p className="text-sm text-ink-soft">{line}</p>
                       </div>
                     ))}
                   </div>
@@ -1620,6 +1634,36 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </footer>
 
       {/* Removed sticky CTA — was intrusive. CTAs live in #handeln section instead. */}
+
+      {/* ── Clarity Check ── */}
+      {showClarity && !claritySubmitted && (
+        <div className="fixed bottom-6 left-6 z-40 bg-bg-card border border-border rounded-2xl shadow-xl p-4 max-w-xs animate-slide-up">
+          <button onClick={() => setShowClarity(false)} className="absolute top-2 right-3 text-ink-muted hover:text-ink cursor-pointer btn-press text-lg">&times;</button>
+          <p className="font-display text-sm mb-1">Ist klar, was FairEint empfiehlt?</p>
+          <p className="text-xs text-ink-muted mb-3">Hilft uns zu messen, ob die Seite wirklich fuehrt statt ueberlaedt.</p>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { key: 'ja', label: 'Ja' },
+              { key: 'teilweise', label: 'Teilweise' },
+              { key: 'nein', label: 'Nein' },
+            ].map((option) => (
+              <button
+                key={option.key}
+                onClick={() => {
+                  trackAction(`clarity_${option.key}`)
+                  localStorage.setItem('faireint_clarity_done', option.key)
+                  setClaritySubmitted(true)
+                  showToast(option.key === 'ja' ? 'Perfekt. Dann messen wir als Nächstes, ob die Seite auch überzeugt.' : 'Danke. Genau daran schärfen wir die Seite weiter.')
+                  setTimeout(() => setShowClarity(false), 2500)
+                }}
+                className="px-3 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press bg-bg-alt hover:bg-gold hover:text-white border border-border transition-colors"
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── NPS Micro-Survey (appears after 90 seconds) ── */}
       {showNPS && !npsSubmitted && (
