@@ -67,6 +67,9 @@ export default function App() {
   const [showReforms, setShowReforms] = useState(false)
   const [showAllPolicies, setShowAllPolicies] = useState(false)
   const [showAllCosts, setShowAllCosts] = useState(false)
+  const [showFutureVision, setShowFutureVision] = useState(false)
+  const [showInnovations, setShowInnovations] = useState(false)
+  const [showAllActions, setShowAllActions] = useState(false)
   const [openReform, setOpenReform] = useState<string | null>(null)
   const [openVoter, setOpenVoter] = useState<string | null>(null)
   const [activePolicy, setActivePolicy] = useState('vermoegenspaket')
@@ -1404,73 +1407,105 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
 
       {/* ━━━━ 5-JAHRES-VISION ━━━━ */}
       <WideSection bg="bg-bg-alt" label="5-Jahres-Vision">
-        <div className="text-center mb-10">
-          <Tag color="gold">Vision 2030</Tag>
+        <div className="text-center mb-8">
+          <Tag color="gold">Zusatzblick</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Deutschland als Vorbild &mdash; in 5 Jahren</h2>
-          <p className="text-ink-muted">Fair nach innen, stark nach außen. Beides gleichzeitig.</p>
+          <p className="text-ink-muted">Nicht Kern der Startseite. Nur oeffnen, wenn du die weiterfuehrende Zukunftsstory sehen willst.</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-          {[
-            { year: '2026', color: 'bg-red-light', label: 'Entbürokratisieren', items: ['Firmengründung in 24h', 'eID endlich nutzen', 'Gratis Schulessen + Kita'] },
-            { year: '2027', color: 'bg-gold-light', label: 'Fair finanzieren', items: ['Vermögensteuer 0,5%', 'Kapital = Arbeit besteuern', 'Deutschlandfonds startet'] },
-            { year: '2028', color: 'bg-green-light', label: 'Innovation starten', items: ['Startup-Gesetz (ESOP)', '10% IT-Budget für AI', 'Energiekosten senken'] },
-            { year: '2029', color: 'bg-blue-light', label: 'EU führen', items: ['EU-Vermögensteuer', 'Digitaler Euro + UBS', 'Ausbildung in 20 Ländern'] },
-            { year: '2030', color: 'bg-purple-light', label: 'Ernte', items: ['Top 5 Digital + Innovation', 'Ungleichheit gesunken', 'Fair UND wettbewerbsfähig'] },
-          ].map((step, i) => (
-            <div key={i} className={`${step.color} rounded-2xl p-4 text-center`}>
-              <p className="font-display text-2xl">{step.year}</p>
-              <p className="font-bold text-xs text-ink-soft mb-3">{step.label}</p>
-              {step.items.map((item, j) => (
-                <p key={j} className="text-xs text-ink-muted mb-1">{item}</p>
+        {!showFutureVision && (
+          <div className="max-w-3xl mx-auto">
+            <Card className="text-center">
+              <p className="text-sm text-ink-soft mb-4">Die Hauptentscheidung ist bereits oben gefallen. Dieser Block zeigt nur noch die erweiterte Zukunftserzählung 2026 bis 2030.</p>
+              <button
+                onClick={() => setShowFutureVision(true)}
+                className="px-6 py-3 bg-bg-alt border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg transition-colors"
+              >
+                Zukunftsbild öffnen
+              </button>
+            </Card>
+          </div>
+        )}
+        {showFutureVision && (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
+              {[
+                { year: '2026', color: 'bg-red-light', label: 'Entbürokratisieren', items: ['Firmengründung in 24h', 'eID endlich nutzen', 'Gratis Schulessen + Kita'] },
+                { year: '2027', color: 'bg-gold-light', label: 'Fair finanzieren', items: ['Vermögensteuer 0,5%', 'Kapital = Arbeit besteuern', 'Deutschlandfonds startet'] },
+                { year: '2028', color: 'bg-green-light', label: 'Innovation starten', items: ['Startup-Gesetz (ESOP)', '10% IT-Budget für AI', 'Energiekosten senken'] },
+                { year: '2029', color: 'bg-blue-light', label: 'EU führen', items: ['EU-Vermögensteuer', 'Digitaler Euro + UBS', 'Ausbildung in 20 Ländern'] },
+                { year: '2030', color: 'bg-purple-light', label: 'Ernte', items: ['Top 5 Digital + Innovation', 'Ungleichheit gesunken', 'Fair UND wettbewerbsfähig'] },
+              ].map((step, i) => (
+                <div key={i} className={`${step.color} rounded-2xl p-4 text-center`}>
+                  <p className="font-display text-2xl">{step.year}</p>
+                  <p className="font-bold text-xs text-ink-soft mb-3">{step.label}</p>
+                  {step.items.map((item, j) => (
+                    <p key={j} className="text-xs text-ink-muted mb-1">{item}</p>
+                  ))}
+                </div>
               ))}
             </div>
-          ))}
-        </div>
-        <p className="text-center text-sm text-ink-muted mt-6">Fairness ist kein Hindernis für Wettbewerb &mdash; sie ist die Voraussetzung. Skandinavien beweist es.</p>
+            <p className="text-center text-sm text-ink-muted mt-6">Fairness ist kein Hindernis für Wettbewerb &mdash; sie ist die Voraussetzung. Skandinavien beweist es.</p>
+          </>
+        )}
       </WideSection>
 
       {/* ━━━━ 10. INNOVATIONEN ━━━━ */}
       <Section id="innovationen" bg="bg-bg">
-        <div className="text-center mb-10">
+        <div className="text-center mb-8">
           <Tag color="purple">Weiterdenken</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">7 Ideen die es noch nirgendwo gibt</h2>
-          <p className="text-ink-muted">Technisch machbar. Politisch möglich. Demokratie-Innovation.</p>
+          <p className="text-ink-muted">Spannend, aber klar zweitrangig gegenueber Paket, Simulator und Fahrplan.</p>
         </div>
-        <div className="space-y-3">
-          {innovations.map(inv => {
-            const open = openInnovation === inv.id
-            return (
-              <div key={inv.id} className={`rounded-2xl border transition-all ${open ? 'bg-bg-card shadow-lg border-gold/30' : 'bg-bg-card border-border'}`}>
-                <button onClick={() => setOpenInnovation(open ? null : inv.id)} className="w-full flex items-center justify-between p-5 sm:p-6 text-left cursor-pointer btn-press">
-                  <div className="flex items-center gap-4">
-                    <span className="text-3xl">{inv.emoji}</span>
-                    <div><h3 className="font-display text-lg">{inv.title}</h3><p className="text-sm text-ink-muted">{inv.oneLiner}</p></div>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Tag color={inv.feasibility === 'sofort' ? 'green' : inv.feasibility === '1-2 Jahre' ? 'gold' : 'red'}>{inv.feasibility}</Tag>
-                    {open ? <ChevronUp className="w-5 h-5 text-gold" /> : <ChevronDown className="w-5 h-5 text-ink-muted/30" />}
-                  </div>
-                </button>
-                {open && (
-                  <div className="px-5 sm:px-6 pb-6 space-y-4">
-                    <div className="bg-red-light rounded-xl p-5"><Tag color="red">Problem</Tag><p className="mt-2 text-ink-soft">{inv.problem}</p></div>
-                    <div className="bg-green-light rounded-xl p-5"><Tag color="green">Lösung</Tag><p className="mt-2 text-ink-soft">{inv.solution}</p></div>
-                    <div>
-                      <p className="font-bold text-sm text-ink-muted mb-2">So funktioniert's</p>
-                      {inv.howItWorks.map((s, i) => (
-                        <div key={i} className="flex items-start gap-3 mb-2">
-                          <span className="w-6 h-6 rounded-full bg-gold-light text-gold text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
-                          <p className="text-ink-soft">{s}</p>
-                        </div>
-                      ))}
+        {!showInnovations && (
+          <div className="max-w-3xl mx-auto">
+            <Card className="text-center">
+              <p className="text-sm text-ink-soft mb-4">Dieser Block ist eher Labor als Kernargument. Erst oeffnen, wenn du nach dem Hauptpaket und der Umsetzungslogik noch tiefer gehen willst.</p>
+              <button
+                onClick={() => setShowInnovations(true)}
+                className="px-6 py-3 bg-bg-alt border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg transition-colors"
+              >
+                Ideenlabor öffnen
+              </button>
+            </Card>
+          </div>
+        )}
+        {showInnovations && (
+          <div className="space-y-3">
+            {innovations.map(inv => {
+              const open = openInnovation === inv.id
+              return (
+                <div key={inv.id} className={`rounded-2xl border transition-all ${open ? 'bg-bg-card shadow-lg border-gold/30' : 'bg-bg-card border-border'}`}>
+                  <button onClick={() => setOpenInnovation(open ? null : inv.id)} className="w-full flex items-center justify-between p-5 sm:p-6 text-left cursor-pointer btn-press">
+                    <div className="flex items-center gap-4">
+                      <span className="text-3xl">{inv.emoji}</span>
+                      <div><h3 className="font-display text-lg">{inv.title}</h3><p className="text-sm text-ink-muted">{inv.oneLiner}</p></div>
                     </div>
-                    <div className="bg-blue-light rounded-xl p-4"><Tag color="blue">Existiert schon?</Tag><p className="mt-2 text-sm text-ink-soft">{inv.exists}</p></div>
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Tag color={inv.feasibility === 'sofort' ? 'green' : inv.feasibility === '1-2 Jahre' ? 'gold' : 'red'}>{inv.feasibility}</Tag>
+                      {open ? <ChevronUp className="w-5 h-5 text-gold" /> : <ChevronDown className="w-5 h-5 text-ink-muted/30" />}
+                    </div>
+                  </button>
+                  {open && (
+                    <div className="px-5 sm:px-6 pb-6 space-y-4">
+                      <div className="bg-red-light rounded-xl p-5"><Tag color="red">Problem</Tag><p className="mt-2 text-ink-soft">{inv.problem}</p></div>
+                      <div className="bg-green-light rounded-xl p-5"><Tag color="green">Lösung</Tag><p className="mt-2 text-ink-soft">{inv.solution}</p></div>
+                      <div>
+                        <p className="font-bold text-sm text-ink-muted mb-2">So funktioniert's</p>
+                        {inv.howItWorks.map((s, i) => (
+                          <div key={i} className="flex items-start gap-3 mb-2">
+                            <span className="w-6 h-6 rounded-full bg-gold-light text-gold text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                            <p className="text-ink-soft">{s}</p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="bg-blue-light rounded-xl p-4"><Tag color="blue">Existiert schon?</Tag><p className="mt-2 text-sm text-ink-soft">{inv.exists}</p></div>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        )}
       </Section>
 
       {/* ━━━━ 11. FINALE + CTA ━━━━ */}
@@ -1490,7 +1525,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
 
         {/* CTA — zero friction */}
         <div className="max-w-md mx-auto space-y-4 mb-12">
-          <h3 className="font-display text-2xl">4 Dinge die du jetzt tun kannst</h3>
+          <h3 className="font-display text-2xl">2 Dinge die jetzt wirklich helfen</h3>
 
           <Card className="text-left !p-5">
             <div className="flex items-start gap-4">
@@ -1522,32 +1557,45 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               </div>
             </div>
           </Card>
-
-          <Card className="text-left !p-5">
-            <div className="flex items-start gap-4">
-              <Heart className="w-6 h-6 text-gold mt-0.5 shrink-0" />
-              <div>
-                <p className="font-bold">Mach ein Reel / TikTok / Story</p>
-                <p className="text-sm text-ink-muted mt-1">Zeig den Starbucks-Vergleich, den Simulator, oder den Fahrplan. Nutze <strong>#FairEint</strong> oder <strong>#Fair1</strong>. Wir reposten die besten.</p>
-                <button onClick={() => { trackAction('reel_copied'); share('€4 pro Tag — weniger als ein Kaffee. So viel kostet ein faires Deutschland. faireint.de #FairEint #Fair1'); }} className="mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg-alt transition-colors">
-                  Reel-Text kopieren
-                </button>
-              </div>
+          {!showAllActions && (
+            <div className="text-center pt-1">
+              <button
+                onClick={() => setShowAllActions(true)}
+                className="px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg-alt transition-colors"
+              >
+                Mehr Möglichkeiten
+              </button>
             </div>
-          </Card>
+          )}
+          {showAllActions && (
+            <>
+              <Card className="text-left !p-5">
+                <div className="flex items-start gap-4">
+                  <Heart className="w-6 h-6 text-gold mt-0.5 shrink-0" />
+                  <div>
+                    <p className="font-bold">Mach ein Reel / TikTok / Story</p>
+                    <p className="text-sm text-ink-muted mt-1">Zeig den Kostenvergleich, den Simulator oder den Fahrplan. Nutze <strong>#FairEint</strong> oder <strong>#Fair1</strong>.</p>
+                    <button onClick={() => { trackAction('reel_copied'); share('€4 pro Tag — weniger als ein Kaffee. So viel kostet ein faires Deutschland. faireint.de #FairEint #Fair1'); }} className="mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg-alt transition-colors">
+                      Reel-Text kopieren
+                    </button>
+                  </div>
+                </div>
+              </Card>
 
-          <Card className="text-left !p-5">
-            <div className="flex items-start gap-4">
-              <ArrowRight className="w-6 h-6 text-gold mt-0.5 shrink-0" />
-              <div>
-                <p className="font-bold">Code prüfen, verbessern, mitbauen</p>
-                <p className="text-sm text-ink-muted mt-1">Open Source. Jede Zahl ist im Code nachvollziehbar. Pull Requests willkommen.</p>
-                <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg-alt transition-colors">
-                  GitHub &rarr;
-                </a>
-              </div>
-            </div>
-          </Card>
+              <Card className="text-left !p-5">
+                <div className="flex items-start gap-4">
+                  <ArrowRight className="w-6 h-6 text-gold mt-0.5 shrink-0" />
+                  <div>
+                    <p className="font-bold">Code prüfen, verbessern, mitbauen</p>
+                    <p className="text-sm text-ink-muted mt-1">Open Source. Jede Zahl ist im Code nachvollziehbar. Pull Requests willkommen.</p>
+                    <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg-alt transition-colors">
+                      GitHub &rarr;
+                    </a>
+                  </div>
+                </div>
+              </Card>
+            </>
+          )}
         </div>
 
         <Card className="max-w-xs mx-auto text-left mb-8">
