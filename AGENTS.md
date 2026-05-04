@@ -53,6 +53,7 @@ All application data is static TypeScript, stored in `src/data/*.ts`. There are 
 - `src/data/path-to-80.ts` — party compromise paths
 - `src/data/backcasting.ts` — 7 backcast goals (e.g. Zero Hunger, Health For All) with milestone timelines
 - `src/data/innovations.ts` — 7 democracy innovation concepts
+- `src/data/reform-generator.ts` — **Idee-Generator**: keyword-matched reform templates with pre-computed persona/party reactions and simulation functions. Templates are drawn from real-world implementations across countries and are matched against user problem input to generate proposals with acceptance scores, net return, and 10-year projections.
 
 When adding new reforms, personas, scenarios, or goals, these are the files to edit. The `App.tsx` file imports and renders them.
 
