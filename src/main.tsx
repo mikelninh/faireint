@@ -18,11 +18,12 @@ const showWorkshopLab = params.get('workshop') === '1'
 const showOptimizer = params.get('optimizer') === '1'
 
 function BonusLauncher() {
-  return <div className="fixed bottom-3 left-1/2 z-50 flex -translate-x-1/2 gap-1 rounded-2xl border border-border bg-white/95 p-1.5 shadow-xl backdrop-blur print:hidden">
-    <a href="?reality=1" className="rounded-xl px-3 py-2 text-[11px] font-black text-ink hover:bg-bg-alt">Reality</a>
-    <a href="?optimizer=1" className="rounded-xl px-3 py-2 text-[11px] font-black text-ink hover:bg-bg-alt">Optimizer</a>
-    <a href="?workshop=1" className="rounded-xl bg-ink px-3 py-2 text-[11px] font-black text-white">Workshop</a>
-  </div>
+  return <nav aria-label="Weitere FairEint-Bereiche" className="fixed bottom-3 left-1/2 z-50 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-1 overflow-x-auto rounded-2xl border border-border bg-white/95 p-1.5 shadow-xl backdrop-blur print:hidden">
+    <span className="hidden shrink-0 px-2 text-[10px] font-black uppercase tracking-wider text-ink-muted sm:block">Entdecken</span>
+    <a href="?reality=1" className="shrink-0 rounded-xl px-3 py-2 text-[11px] font-black text-ink transition hover:bg-bg-alt">Haushaltscheck</a>
+    <a href="?optimizer=1" className="shrink-0 rounded-xl px-3 py-2 text-[11px] font-black text-ink transition hover:bg-bg-alt">Trade-offs</a>
+    <a href="?workshop=1" className="shrink-0 rounded-xl bg-ink px-3 py-2 text-[11px] font-black text-white">Workshop</a>
+  </nav>
 }
 
 createRoot(document.getElementById('root')!).render(
