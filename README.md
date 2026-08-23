@@ -1,139 +1,141 @@
-# FairEint 5.0
+# FairEint 5.1
 
 **Politik zum Ausprobieren. Und zum Einigen.**
 
-[🚀 FairEint öffnen](https://mikelninh.github.io/faireint/) · [💰 DIW 1%-Vermögensteuer-Lab](https://mikelninh.github.io/faireint/?diw=1) · [🔬 Methodik](FAIREINT_5_METHOD.md)
+[🚀 FairEint](https://mikelninh.github.io/faireint/) · [🔎 Reality Lab](https://mikelninh.github.io/faireint/?reality=1) · [🧭 Policy Optimizer](https://mikelninh.github.io/faireint/?optimizer=1) · [🧑‍🏫 Workshop Mode](https://mikelninh.github.io/faireint/?workshop=1) · [💰 DIW 1%-Lab](https://mikelninh.github.io/faireint/?diw=1) · [🔬 Methodik](FAIREINT_5_METHOD.md)
 
-FairEint ist ein parteiunabhängiges, evidenzorientiertes Bürger-Policy-Lab. Menschen können ein eigenes Steuer- und Investitionspaket bauen, Unsicherheiten prüfen, dokumentierte Parteipositionen vergleichen und mehrere Pakete zu einem transparenten Konsensvorschlag zusammenführen.
+FairEint ist ein parteiunabhängiges, evidenzorientiertes Bürger-Policy-Lab. Menschen bauen ein Steuer- und Investitionspaket, prüfen Quellen und Nebenwirkungen, vergleichen dokumentierte politische Positionen und können mehrere Pakete zu einem transparenten Konsensvorschlag zusammenführen.
 
-## Die Grundregel
+## Grundregel
 
 **Repräsentative Umfragen sind Ground Truth.**
-
-Synthetische Personas oder FairEint-Simulationen dürfen nicht als Aussage darüber präsentiert werden, „was die Bürger wollen“.
 
 FairEint trennt sichtbar:
 
 - **Ground Truth** — repräsentative Befragungen
+- **veröffentlichte Mikrosimulation** — z. B. ZEW-EviSTA/SOEP oder DIW
 - **Modelle** — wissenschaftliche oder nachvollziehbare Modellrechnungen
 - **Programme / Positionen** — dokumentierte politische Aussagen
 - **Parlament** — dokumentierte Anträge, Debatten oder Abstimmungen
-- **Simulationen** — FairEint-interne Stress-, Vergleichs- und Konsenswerte
+- **Simulationen** — FairEint-interne Stress-, Vergleichs-, Optimizer- und Konsenswerte
 
-## V2.1 → V5.0
+Eine FairEint-Heuristik darf nie als repräsentative Meinung oder wissenschaftlich bewiesenes Optimum dargestellt werden.
+
+## V2.1 → V5.1
 
 ### 2.1 — Evidence Ledger
-Quelle, Datum, Evidenzklasse, Confidence, Stichprobe und — wo relevant — Auftraggeber werden sichtbar gemacht.
-
-Kernbasis 2026: WDR/ARD + infratest dimap, ARD-DeutschlandTrend, IMK/Hans-Böckler-Stiftung, DIW Berlin und Deutscher Bundestag.
+Quelle, Datum, Evidenzklasse, Confidence, Stichprobe und — wo relevant — Auftraggeber werden sichtbar.
 
 ### 2.5 — Wer zahlt / wer profitiert?
-Sechs transparente Haushalts-Archetypen dienen als **Stresstest**. Steuerexposition und Passung öffentlicher Ausgaben werden getrennt dargestellt. Keine erfundenen individuellen Euro-Gewinne.
+Der Hauptflow nutzt transparente Haushalts-Archetypen nur als Stresstest. Keine erfundenen individuellen Euro-Gewinne.
 
 ### 3.0 — 1 / 5 / 10 Jahre
-Die derzeitige FairEint-Fiskalhülle kann mechanisch über 1, 5 und 10 Jahre betrachtet werden. Das ist ausdrücklich **keine Makroprognose**.
+Mechanische Fiskalhüllen mit expliziten Unsicherheiten. Keine Makroprognose.
 
 ### 4.0 — Politik-Modus
-Ein Nutzerpaket wird zu einem druckbaren Bürger-Policy-Briefing mit:
-
-- Steuer- und Investitionsrichtung
-- Budgetprioritäten
-- Programm-Nähe mit Quellen
-- separater Bundestags-Evidenz
-- PDF/Druck via Browser
-
-Programme und parlamentarisches Handeln werden nicht heimlich in einen gemeinsamen Score gemischt.
+Druckbares Bürger-Policy-Briefing mit Programm-Nähe, Quellen und einer getrennten Bundestags-Evidenzschicht.
 
 ### 5.0 — Konsens-Lab
-Mehrere FairEint-Ergebnislinks können lokal im Browser verglichen werden. Das Lab zeigt gemeinsame Prioritäten, Konfliktlinien, einen transparenten Konsens-Index und einen teilbaren Kompromiss.
+Mehrere Ergebnislinks werden lokal im Browser verglichen. Das Lab zeigt gemeinsame Prioritäten, Konflikte, einen transparenten Konsens-Index und einen teilbaren Kompromiss.
 
-Der Index ist eine **Simulation**, keine repräsentative Umfrage und kein wissenschaftlich validierter Demokratieindikator.
+### 5.1 — Reality Lab
+Unter [`?reality=1`](https://mikelninh.github.io/faireint/?reality=1) nutzt FairEint **veröffentlichte ZEW-Mikrosimulationsergebnisse** statt eigener Haushaltsannahmen.
 
-## Neu: DIW 1%-Vermögensteuer-Lab
+Aktueller Beispielhaushalt: Alleinverdiener-Ehepaar mit zwei Kindern. ZEW-EviSTA auf Basis des Sozio-oekonomischen Panels (SOEP), direkte modellierte Wirkungen der untersuchten Steuer-/Transfermaßnahmen.
 
-Unter [`?diw=1`](https://mikelninh.github.io/faireint/?diw=1) gibt es einen getrennten Quellen-/Szenario-Explorer für **DIW Politikberatung kompakt 211 (2026), Tabelle 5-4**.
+Beispiele aus der ZEW-Veröffentlichung:
 
-Verglichen werden drei direkt aus derselben Tabelle stammende Szenarien mit proportionalem Steuersatz von 1 % und 5 Mio. € Unternehmensfreibetrag:
+| Brutto/Jahr | AfD | CDU/CSU | SPD | Grüne | Linke | BSW | FDP |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 40.000 € | −440 € | +300 € | +860 € | +870 € | +6.150 € | +1.010 € | −1.520 € |
+| 180.000 € | +19.190 € | +5.840 € | +2.200 € | +100 € | −800 € | ±0 € | +11.990 € |
 
-| Persönlicher Freibetrag | Steueraufkommen | DIW-Konfidenzintervall | Steuerpflichtige im Modell |
-|---|---:|---:|---:|
-| 1 Mio. € | 42,2 Mrd. € | 39,3–45,3 Mrd. € | ca. 1,322 Mio. |
-| 2 Mio. € | 34,7 Mrd. € | 32,4–37,1 Mrd. € | ca. 0,400 Mio. |
-| 5 Mio. € | 28,6 Mrd. € | 26,8–30,6 Mrd. € | ca. 0,117 Mio. |
+**Wichtig:** Das ZEW simuliert nicht die Wahlprogramme als Ganzes. Nicht alle Maßnahmen sind haushaltsbezogen quantifizierbar; Zweitrundeneffekte und manche Kaufkraftwirkungen sind nicht enthalten.
 
-**Wichtig:** Das sind potenzielle Mikrosimulationswerte. Die DIW-Studie weist darauf hin, dass Anpassungsreaktionen der Steuerpflichtigen das reale Aufkommen verändern können. Der Auftraggeber der Studie wird im Lab transparent angezeigt.
+FairEint formuliert deshalb nicht „Partei X verarscht ihre Wähler“. Der Reality Check zeigt stattdessen:
 
-Das DIW-Lab bleibt absichtlich getrennt von Partei- und Konsensscores. Eine konkrete fiskalische Simulation ist nicht dasselbe wie eine politische Richtungsentscheidung.
+**Parteibehauptung → unabhängige Simulation → fiskalische Wirkung → Gegenargument → Modellgrenzen → parlamentarische Evidenz.**
 
-## Partei-Match
+### Verhalten / Zweitrundeneffekte
+Das Reality Lab verlinkt zusätzlich die ifo-Analyse 2025, die Arbeitsangebotsreaktionen modelliert. Die dort untersuchten Reformen finanzieren sich durch solche Reaktionen in der Regel zu weniger als 10 % selbst. FairEint verwendet daraus bewusst **keinen pauschalen Multiplikator** für einzelne Gesetze.
 
-Der Score vergleicht Nutzerentscheidungen und dokumentierte Parteipositionen nur in den enthaltenen Dimensionen:
+### Bundestag Open-Data-Gateway
+FairEint verlinkt direkt auf:
 
-- Vermögensteuer
-- Erbschaftsteuer
-- hohe Einkommen
-- Investitionen / Schuldenregel
-- öffentliche Daseinsvorsorge
-- Klimaausgaben
-- Sicherheitsausgaben
+- offizielle namentliche Abstimmungen
+- Bundestag Open Data (XML/JSON/XLSX)
+- offizielle DIP API
 
-Außenpolitik, Migration, Europa, Bürgerrechte und weitere wahlentscheidende Felder fehlen. Der Match ist deshalb **keine Wahlempfehlung**.
+Der Bundestag stellt diese Daten maschinenlesbar bereit. **5.1 behauptet noch keinen vollständigen lokalen Mirror aller Abstimmungslisten.** Das ist die nächste Datenpipeline; bis dahin ist die Coverage in der UI explizit sichtbar.
 
-## Fiskalische Ehrlichkeit
+### Policy Optimizer
+Unter [`?optimizer=1`](https://mikelninh.github.io/faireint/?optimizer=1) werden derzeit drei belegte Reformdesigns vergleichbar gemacht:
 
-Der Haupt-Policy-Flow nutzt weiterhin einen bewusst vereinfachten Vermögensteuer-Korridor für die spielerische Gesamt-Experience. Die **exakten drei 1%-DIW-Szenarien** sind separat im DIW-Lab verfügbar, damit Quelle und Modellannahmen nicht mit dem politischen Richtungs-Score vermischt werden.
+- ZEW 2026: gezielte Entlastung mittlerer Einkommen
+- DIW 2026: Erbschaftsteuerreform mit Lebensfreibeträgen und weniger Privilegien
+- DIW 2026: 1%-Vermögensteuer mit hohen Freibeträgen
 
-Erbschaft- und Einkommensteuerentscheidungen werden nicht künstlich zu einem Gesamt-Eurobetrag addiert, solange keine einheitlich geprüften Szenariotabellen integriert sind.
+Nutzer gewichten Ziele wie fiskalischen Spielraum, breite Entlastung, Einfachheit und Vermögenskonzentration. Der resultierende Score ist eine **sichtbare FairEint-Heuristik**, kein wissenschaftlich bewiesenes soziales Optimum.
 
-> Eine sichtbare Lücke ist besser als Scheingenauigkeit.
+Die langfristige Zielarchitektur ist eine echte Pareto-Front auf Basis geprüfter Mikrosimulation, Verhaltensreaktionen, Verwaltungs-/Rechtsrisiken und Bürgerpräferenzen.
 
-## Architektur
+### Workshop / Education Mode
+Unter [`?workshop=1`](https://mikelninh.github.io/faireint/?workshop=1) gibt es einen Facilitator-Modus mit 60- und 120-Minuten-Ablauf.
 
-```text
-src/
-  FairEintV5.tsx          # V5 Policy- & Konsens-Experience
-  DiwWealthLab.tsx        # exakter 1%-Szenario-Explorer
-  FairEintV2.tsx          # vorherige V2
-  data/
-    v2.ts                 # Ground Truth, Budget, Partei-Positionen
-    v5.ts                 # Evidence Ledger, Archetypen, Bundestag
-    diw2026.ts            # DIW Tabelle 5-4: drei 1%-Szenarien
-  lib/
-    policyEngine.ts       # Partei-Match + Haupt-Fiskalkorridor
-    v5Engine.ts           # Impact, Zeit, Sharing und Konsens
-```
+Er orientiert sich an den veröffentlichten HPI Design-Thinking-Phasen:
 
-### Zugänge
+1. Verstehen
+2. Beobachten
+3. Sichtweise definieren
+4. Ideen finden
+5. Prototypen entwickeln
+6. Testen
 
-- Standard: **V5**
+FairEint ist dabei der Policy-Prototyp. Parteien werden bewusst erst nach Bedürfnisinterviews und individuellen Entscheidungen eingeblendet.
+
+Das ist **kein offizielles HPI-Format**.
+
+## DIW 1%-Vermögensteuer-Lab
+
+Unter [`?diw=1`](https://mikelninh.github.io/faireint/?diw=1) gibt es einen getrennten Explorer für DIW Politikberatung kompakt 211 (2026), Tabelle 5-4.
+
+Bei 1 % Steuersatz und 5 Mio. € Betriebsvermögensfreibetrag:
+
+| Persönlicher Freibetrag | potenzielles Aufkommen | DIW-Konfidenzintervall |
+|---|---:|---:|
+| 1 Mio. € | 42,2 Mrd. € | 39,3–45,3 Mrd. € |
+| 2 Mio. € | 34,7 Mrd. € | 32,4–37,1 Mrd. € |
+| 5 Mio. € | 28,6 Mrd. € | 26,8–30,6 Mrd. € |
+
+Anpassungsreaktionen können das tatsächliche Aufkommen reduzieren. Auftraggeber der Studie und Modellgrenzen werden sichtbar ausgewiesen.
+
+## Zugänge
+
+- Standard: **FairEint 5.1**
+- `?reality=1` — veröffentlichte Haushalts-Mikrosimulation / Party Reality Check
+- `?optimizer=1` — transparenter Policy-Trade-off-Optimizer
+- `?workshop=1` — Facilitator / Education Mode
 - `?diw=1` — DIW 1%-Vermögensteuer-Lab
 - `?v2=1` — V2
 - `?legacy=1` — ursprüngliche FairEint-Version
 
-Alte V2-Paketparameter (`w`, `e`, `i`, `d`, `b`) bleiben lesbar. Neue Share-Links verwenden zusätzlich `view=result`, damit Empfänger direkt beim Ergebnis landen.
+## Noch offen für institutionellen / wissenschaftlichen Einsatz
 
-## Noch nicht wissenschaftlich fertig
-
-Vor formellem wissenschaftlichen oder institutionellen Einsatz sollten insbesondere folgen:
-
-- unabhängiger Review der Partei-Scores
-- weitere DIW-Tarifszenarien inklusive systematischer Verhaltensreaktionen integrieren
-- echte Haushalts-/Verteilungsmikrosimulation
-- strukturierte Bundestags-Abstimmungsdaten
+- vollständiger lokaler Mirror und Normalisierung aller namentlichen Bundestagsabstimmungen
+- unabhängiger Review aller Partei-Positionsscores
+- eigener reproduzierbarer Tax-Benefit-Mikrosimulationsadapter (z. B. EUROMOD/geeignete Modelle) statt nur veröffentlichter Ergebnis-Snapshots
+- systematischer Verhaltensreaktions-Layer pro Reformdesign
 - Quellen-Snapshots und Versionierung
 - Accessibility-/Usability-Tests mit realen Bürger:innen
-- externer Review des Konsens-Index
+- externer Review von Konsens- und Optimizer-Heuristiken
 
-V5 ist ein **integrierter, politikfähiger Prototyp**, kein zertifiziertes Prognose- oder Wahlberatungssystem.
+FairEint 5.1 ist ein **integrierter, politikfähiger Prototyp**, kein zertifiziertes Prognose-, Wahlberatungs- oder Optimierungssystem.
 
-## Lokal starten
+## Lokal
 
 ```bash
 npm install
 npm run dev
-```
-
-```bash
 npm run build
 ```
 
