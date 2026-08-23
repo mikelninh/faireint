@@ -1,48 +1,62 @@
 # FairEint 5.0 — Methodik & Grenzen
 
-FairEint soll politische Entscheidungen verständlicher machen, ohne Simulationen als Tatsachen auszugeben. Dieses Dokument beschreibt die Regeln hinter V5 so, dass Ergebnisse überprüfbar und kritisierbar bleiben.
+FairEint soll politische Entscheidungen verständlicher machen, ohne Simulationen als Tatsachen auszugeben. Jede zentrale Zahl soll erkennen lassen, ob sie **erhoben, modelliert oder von FairEint simuliert** wurde.
 
 ## 1. Evidenzklassen
 
-FairEint trennt fünf Arten von Aussagen:
-
-1. **Ground Truth** — repräsentative Befragungen. Angezeigt werden Quelle, Datum und Stichprobe.
-2. **Modell** — wissenschaftliche oder nachvollziehbare Modellrechnungen. Ergebnisbereiche sind keine garantierten Zukunftswerte.
+1. **Ground Truth** — repräsentative Befragungen mit Quelle, Datum und Stichprobe.
+2. **Modell** — wissenschaftliche oder nachvollziehbare Modellrechnungen; keine garantierten Zukunftswerte.
 3. **Programm / Position** — dokumentierte Positionen von Parteien oder Fraktionen.
 4. **Parlament** — dokumentierte Anträge, Debatten oder Abstimmungen im Deutschen Bundestag.
-5. **Simulation** — von FairEint berechnete Vergleichs-, Stress- oder Konsenswerte.
+5. **Simulation** — FairEint-interne Vergleichs-, Stress- oder Konsenswerte.
 
-Diese Klassen dürfen in der UI nicht ohne Kennzeichnung vermischt werden.
+Diese Klassen werden nicht ohne Kennzeichnung vermischt.
 
-## 2. Vermögensteuer-Korridor
+## 2. Vermögensteuer: zwei bewusst getrennte Ebenen
 
-V5 übernimmt vorerst den bereits in V2 verwendeten gerundeten Explorationskorridor:
+### A. Haupt-Policy-Flow
+
+Der spielerische V5-Hauptflow übernimmt zunächst den groben V2-Explorationskorridor:
 
 - keine Vermögensteuer: 0 Mrd. €/Jahr
-- moderates Szenario: 20–30 Mrd. €/Jahr
-- stärkeres Szenario: 30–40 Mrd. €/Jahr
+- gezielte Richtung: 20–30 Mrd. €/Jahr
+- deutlich stärkere Richtung: 30–40 Mrd. €/Jahr
 
-Die Orientierung stammt aus der DIW-Modellierung 2026. FairEint bezeichnet diese Werte ausdrücklich **nicht** als amtlichen Forecast. Bewertung, Freibeträge, Unternehmensvermögen, Ausweichreaktionen, Recht und Konjunktur können das reale Aufkommen verändern.
+Dieser Korridor dient der **Policy-Experience**, nicht als amtlicher Forecast. Erbschaft- und Einkommensteuerentscheidungen werden nicht künstlich zu einem Gesamtbetrag addiert.
 
-Erbschaft- und Einkommensteuerentscheidungen werden in V5 **nicht** künstlich zu einem Gesamtbetrag addiert, solange keine einheitlich geprüften Szenariotabellen integriert sind.
+### B. Separates DIW 1%-Vermögensteuer-Lab (`?diw=1`)
 
-### 1 / 5 / 10 Jahre
+Für konkrete fiskalische Diskussionen zeigt FairEint drei Original-Szenarien aus **DIW Berlin, Politikberatung kompakt 211 (2026), Tabelle 5-4**, Tarifszenario 3: proportionaler Vermögensteuersatz von 1 %.
 
-Die V3-Zeitansicht ist eine mechanische Fiskalhülle:
+Alle drei Szenarien halten den Unternehmensfreibetrag bei 5 Mio. € konstant:
+
+| Persönlicher Freibetrag | Aufkommen | Konfidenzintervall | Steuerpflichtige |
+|---|---:|---:|---:|
+| 1 Mio. € | 42,2 Mrd. € | 39,3–45,3 Mrd. € | ca. 1,322 Mio. |
+| 2 Mio. € | 34,7 Mrd. € | 32,4–37,1 Mrd. € | ca. 0,400 Mio. |
+| 5 Mio. € | 28,6 Mrd. € | 26,8–30,6 Mrd. € | ca. 0,117 Mio. |
+
+Die DIW-Studie beschreibt dieses potenzielle Aufkommen **vorbehaltlich von Anpassungsreaktionen der Steuerpflichtigen**. Das Lab behauptet deshalb nicht, dass genau dieser Betrag real eingenommen würde.
+
+Der Auftraggeber der DIW-Studie wird in der UI transparent genannt. Das Szenario-Lab bleibt absichtlich getrennt von Partei- und Konsensscores.
+
+### 1 / 5 / 10 Jahre im Hauptflow
+
+Die V3-Zeitansicht ist mechanisch:
 
 `Jahreskorridor × Anzahl Jahre`
 
-Sie ist **keine Makroprognose**. Es werden weder Wachstumseffekte noch Verhaltensanpassungen, Inflation, Gesetzesänderungen oder Rückkopplungen automatisch fortgeschrieben. Darum sind 5- und 10-Jahreswerte als `exploratory` markiert.
+Sie ist **keine Makroprognose**. Wachstum, Verhaltensanpassungen, Inflation, Gesetzesänderungen und Rückkopplungen werden nicht fortgeschrieben. 5- und 10-Jahreswerte sind deshalb `exploratory`.
 
 ## 3. Partei-Programm-Match
 
-Der bestehende V2-Score vergleicht Nutzerentscheidungen und dokumentierte Parteipositionen auf einer groben Skala von -2 bis +2.
+Der bestehende Score vergleicht Nutzerentscheidungen und dokumentierte Parteipositionen auf einer groben Skala von -2 bis +2.
 
-Aktuelle Dimensionen:
+Dimensionen:
 
 - Vermögensteuer
 - Erbschaftsteuer
-- Besteuerung hoher Einkommen
+- hohe Einkommen
 - Investitionen / Schuldenregel
 - öffentliche Daseinsvorsorge
 - Klimaausgaben
@@ -50,95 +64,86 @@ Aktuelle Dimensionen:
 
 Gewichte in `src/lib/policyEngine.ts`:
 
-- Vermögen: 1.35
-- Erbschaft: 1.25
-- hohe Einkommen: 1.15
-- Investitionen / Schulden: 0.85
-- Daseinsvorsorge: 1.20
-- Klima: 0.70
-- Sicherheit: 0.70
+- Vermögen 1,35
+- Erbschaft 1,25
+- hohe Einkommen 1,15
+- Daseinsvorsorge 1,20
+- Investitionen / Schulden 0,85
+- Klima 0,70
+- Sicherheit 0,70
 
-Der Prozentwert ist eine normalisierte Ähnlichkeit innerhalb **dieser** Dimensionen. Er ist keine Wahlprognose, keine politische Identität und keine Wahlempfehlung. Außenpolitik, Migration, Europa, Bürgerrechte und weitere wichtige Felder fehlen.
+Der Prozentwert ist nur eine normalisierte Ähnlichkeit innerhalb dieser Dimensionen. Außenpolitik, Migration, Europa, Bürgerrechte und viele weitere Felder fehlen. Der Match ist **keine Wahlempfehlung**.
 
 ### Programme und Handlungen bleiben getrennt
 
-V4 zeigt Bundestags-Evidenz zusätzlich zum Programm-Match. Parlamentarische Anträge oder Abstimmungen werden noch **nicht** heimlich in denselben Score eingerechnet. So bleibt sichtbar, ob eine Aussage aus einem Programm oder aus tatsächlichem parlamentarischem Handeln stammt.
+V4 zeigt Bundestags-Evidenz zusätzlich zum Programm-Match. Parlamentarische Handlungen werden noch nicht heimlich in denselben Score eingerechnet.
 
 ## 4. Haushalts-Stresstest (V2.5)
 
-Die sechs Haushalts-Archetypen sind **keine repräsentativen Haushalte** und keine Mikrodaten. Sie dienen nur dazu, Designrisiken sichtbar zu machen.
-
-Für jeden Archetyp berechnet FairEint zwei getrennte Größen:
+Die sechs Archetypen sind **keine repräsentativen Haushalte** und keine Mikrodaten.
 
 ### Steuerexposition
 
-Jede Steuerentscheidung hat eine Intensität:
+Entscheidungsintensität:
 
 - aus = 0
 - gezielt = 1
 - deutlich = 2
 
-Jeder Archetyp besitzt transparente Expositionsgewichte für Vermögen, Erbschaft und hohes Einkommen. Die Summe wird auf eine 0–100-Stressskala normalisiert.
-
-Der Wert bedeutet nicht „so viel Prozent Steuer“. Er bedeutet nur: **Wie stark könnte dieser Archetyp im gewählten Politikdesign direkt betroffen sein?**
+Archetypen besitzen transparente Expositionsgewichte für Vermögen, Erbschaft und hohes Einkommen. Das Resultat ist eine 0–100-Stressskala — **kein Steuersatz und kein Eurobetrag**.
 
 ### Ausgaben-Passung
 
-Die Budgetanteile des Nutzers werden mit transparenten Prioritätsgewichten des Archetyps gewichtet. Das Ergebnis wird auf eine 0–100-Passungsskala normalisiert.
+Budgetanteile werden mit transparenten Prioritätsgewichten des Archetyps gewichtet und auf 0–100 normalisiert. Das ist **kein individueller Geldnutzen**.
 
-Der Wert bedeutet nicht „so viel Euro Nutzen“. Er bedeutet nur: **Wie stark liegen die gewählten öffentlichen Prioritäten in Bereichen, die für diesen Archetyp plausibel relevant sind?**
-
-Beide Werte müssen getrennt bleiben. Ein Haushalt kann zugleich höhere Steuerexposition und hohe Passung bei öffentlichen Leistungen haben.
+Beide Größen bleiben getrennt: Ein Haushalt kann höhere Steuerexposition und zugleich hohe Passung bei öffentlichen Leistungen haben.
 
 ## 5. Konsens-Lab (V5)
 
-Das Konsens-Lab vergleicht ausschließlich die eingegebenen FairEint-Pakete. Es ist keine repräsentative Umfrage.
+Das Lab vergleicht nur die eingegebenen FairEint-Pakete. Es ist keine repräsentative Umfrage.
 
-### Steuer- und Finanzierungsentscheidungen
+### Kompromiss
 
-Für Vermögensteuer, Erbschaftsteuer, hohe Einkommen und Schuldenregel wird der **Median** der ordinalen Entscheidungen als Kompromiss gewählt.
+- Steuer-/Finanzierungsentscheidungen: Median der ordinalen Entscheidungen
+- Budget: Durchschnitt je Kategorie, danach Rundung auf exakt 100 Punkte
 
-### Budget
+### Konfliktstärke beim Budget
 
-Für jede Budgetkategorie wird der Durchschnitt der eingegebenen Anteile berechnet. Die Werte werden anschließend so gerundet, dass das Kompromissbudget wieder exakt 100 Punkte ergibt.
+`Spread = Maximum − Minimum`
 
-### Konfliktstärke
-
-Für jede Budgetkategorie wird die Spannweite `Maximum − Minimum` berechnet:
-
-- Spread ≤ 6 Punkte: `strong`
-- Spread ≤ 13 Punkte: `workable`
+- Spread ≤ 6: `strong`
+- Spread ≤ 13: `workable`
 - darüber: `conflict`
 
 ### Konsens-Index
 
-Der Index kombiniert zwei Komponenten:
-
 - 60 % Budget-Ähnlichkeit
 - 40 % exakte Übereinstimmung bei den vier Richtungsentscheidungen
 
-Budget-Ähnlichkeit pro Kategorie:
+Budget-Ähnlichkeit je Kategorie:
 
 `max(0, 100 − Spread × 4)`
 
-Der finale Index ist eine FairEint-Simulation und wird entsprechend beschriftet. Er ist kein wissenschaftlich validierter Demokratieindikator.
+Der Index ist eine **FairEint-Simulation**, kein wissenschaftlich validierter Demokratieindikator.
 
 ## 6. Datenschutz im Gruppenmodus
 
-Der aktuelle V5-Gruppenmodus verarbeitet eingefügte Paket-Links lokal im Browser. In diesem Build gibt es keinen Gruppen-Backend-Speicher. Paketparameter können jedoch im geteilten URL-Link sichtbar sein; Nutzer sollten deshalb keine persönlichen oder sensiblen Informationen in Namen oder Links schreiben.
+Paket-Links werden im aktuellen V5-Build lokal im Browser verarbeitet. Es gibt keinen Gruppen-Backend-Speicher. URL-Parameter sind allerdings sichtbar; keine sensiblen Daten in Namen oder Links schreiben.
 
-## 7. Was vor formellem politischen / wissenschaftlichen Einsatz noch fehlt
+## 7. Was noch fehlt
 
-1. unabhängiger Review aller Partei-Scores gegen Originaldokumente
-2. maschinenlesbare Integration der vollständigen DIW-Szenariotabellen
-3. echte Mikrosimulation für Haushalts- und Verteilungswirkungen (z. B. PolicyEngine/EUROMOD, sofern methodisch passend)
-4. strukturierte Bundestags-Abstimmungsdaten zusätzlich zu Anträgen und Debatten
-5. systematische Quellen-Versionierung / Snapshots
-6. Accessibility- und Usability-Test mit realen Nutzergruppen
+Vor formellem wissenschaftlichen oder institutionellen Einsatz sollten insbesondere folgen:
+
+1. unabhängiger Review aller Partei-Scores
+2. weitere DIW-Tarifvarianten und systematische Anpassungsreaktionen integrieren
+3. echte Haushalts-/Verteilungsmikrosimulation (z. B. PolicyEngine/EUROMOD, sofern passend)
+4. strukturierte Bundestags-Abstimmungsdaten
+5. Quellen-Snapshots und Versionierung
+6. Accessibility-/Usability-Tests mit realen Bürger:innen
 7. externer methodischer Review des Konsens-Index
 
 ## Prinzip
 
 > Eine Lücke sichtbar lassen ist besser als eine präzise Zahl erfinden.
 
-FairEint darf anschaulich sein. Es darf spielerisch sein. Aber jede Zahl muss erkennen lassen, ob sie erhoben, modelliert oder simuliert wurde.
+FairEint darf spielerisch sein. Aber jede Zahl muss erkennen lassen, woher sie kommt und wie sicher sie ist.
