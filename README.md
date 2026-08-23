@@ -2,9 +2,9 @@
 
 **Politik zum Ausprobieren. Und zum Einigen.**
 
-[🚀 Live öffnen](https://mikelninh.github.io/faireint/) · [💻 Quellcode](https://github.com/mikelninh/faireint) · [🔬 Methodik](FAIREINT_5_METHOD.md) · [📐 ursprünglicher 2.0-Plan](FAIREINT_2_PLAN.md)
+[🚀 FairEint öffnen](https://mikelninh.github.io/faireint/) · [💰 DIW 1%-Vermögensteuer-Lab](https://mikelninh.github.io/faireint/?diw=1) · [🔬 Methodik](FAIREINT_5_METHOD.md)
 
-FairEint ist ein parteiunabhängiges, evidenzorientiertes Bürger-Policy-Lab. Menschen können ein eigenes Steuer- und Investitionspaket bauen, die Grenzen der Simulation sehen, dokumentierte Parteipositionen vergleichen und mehrere Pakete zu einem transparenten Konsensvorschlag zusammenführen.
+FairEint ist ein parteiunabhängiges, evidenzorientiertes Bürger-Policy-Lab. Menschen können ein eigenes Steuer- und Investitionspaket bauen, Unsicherheiten prüfen, dokumentierte Parteipositionen vergleichen und mehrere Pakete zu einem transparenten Konsensvorschlag zusammenführen.
 
 ## Die Grundregel
 
@@ -20,67 +20,54 @@ FairEint trennt sichtbar:
 - **Parlament** — dokumentierte Anträge, Debatten oder Abstimmungen
 - **Simulationen** — FairEint-interne Stress-, Vergleichs- und Konsenswerte
 
-## Was V5 kann
+## V2.1 → V5.0
 
 ### 2.1 — Evidence Ledger
-Jede zentrale Behauptung kann Quelle, Datum, Evidenzklasse, Confidence, Stichprobe und — wo relevant — Auftraggeber zeigen.
+Quelle, Datum, Evidenzklasse, Confidence, Stichprobe und — wo relevant — Auftraggeber werden sichtbar gemacht.
 
-Aktuelle Kernbasis:
-
-- Infratest dimap für WDR/ARD, April 2026 — Vermögensteuer und hohe Erbschaften
-- ARD-DeutschlandTrend, Mai 2026 — hohe Einkommen und hohe Erbschaften
-- IMK / Hans-Böckler-Stiftung, April 2026 — öffentliche Investitionsprioritäten und Finanzierung
-- DIW Berlin, 2026 — Vermögensteuer-Modellierung
-- Deutscher Bundestag, 2026 — erste getrennte Evidenzschicht zu parlamentarischen Anträgen und Debatten
+Kernbasis 2026: WDR/ARD + infratest dimap, ARD-DeutschlandTrend, IMK/Hans-Böckler-Stiftung, DIW Berlin und Deutscher Bundestag.
 
 ### 2.5 — Wer zahlt / wer profitiert?
-Sechs transparente Haushalts-Archetypen werden als **Stresstest** genutzt. FairEint zeigt getrennt:
-
-- mögliche direkte Steuerexposition
-- Passung des gewählten Zusatzbudgets zu plausiblen öffentlichen Prioritäten
-
-Es werden bewusst keine erfundenen individuellen Euro-Gewinne angezeigt.
+Sechs transparente Haushalts-Archetypen dienen als **Stresstest**. Steuerexposition und Passung öffentlicher Ausgaben werden getrennt dargestellt. Keine erfundenen individuellen Euro-Gewinne.
 
 ### 3.0 — 1 / 5 / 10 Jahre
-Der aktuelle fiskalische Korridor kann mechanisch auf 1, 5 und 10 Jahre dargestellt werden. Diese Ansicht ist ausdrücklich **keine Makroprognose**; längerfristige Werte sind explorativ.
+Die derzeitige FairEint-Fiskalhülle kann mechanisch über 1, 5 und 10 Jahre betrachtet werden. Das ist ausdrücklich **keine Makroprognose**.
 
 ### 4.0 — Politik-Modus
-Aus einem Nutzerpaket entsteht ein druckbares Bürger-Policy-Briefing:
+Ein Nutzerpaket wird zu einem druckbaren Bürger-Policy-Briefing mit:
 
-- gewählte Steuer- und Investitionsrichtung
-- Top-Budgetprioritäten
+- Steuer- und Investitionsrichtung
+- Budgetprioritäten
 - Programm-Nähe mit Quellen
-- separate Bundestags-Evidenz
+- separater Bundestags-Evidenz
 - PDF/Druck via Browser
 
-Programme und parlamentarisches Handeln werden nicht heimlich in einen gemeinsamen Score vermischt.
+Programme und parlamentarisches Handeln werden nicht heimlich in einen gemeinsamen Score gemischt.
 
 ### 5.0 — Konsens-Lab
-Mehrere FairEint-Ergebnislinks können lokal im Browser verglichen werden.
+Mehrere FairEint-Ergebnislinks können lokal im Browser verglichen werden. Das Lab zeigt gemeinsame Prioritäten, Konfliktlinien, einen transparenten Konsens-Index und einen teilbaren Kompromiss.
 
-Das Lab zeigt:
+Der Index ist eine **Simulation**, keine repräsentative Umfrage und kein wissenschaftlich validierter Demokratieindikator.
 
-- gemeinsame Prioritäten
-- Konfliktlinien
-- einen transparenten Konsens-Index
-- den kleinsten gemeinsamen Kompromiss auf Basis von Median und Budgetdurchschnitt
-- einen teilbaren Kompromiss-Link
+## Neu: DIW 1%-Vermögensteuer-Lab
 
-Der Konsens-Index ist eine **Simulation**, keine repräsentative Umfrage und kein wissenschaftlich validierter Demokratieindikator.
+Unter [`?diw=1`](https://mikelninh.github.io/faireint/?diw=1) gibt es einen getrennten Quellen-/Szenario-Explorer für **DIW Politikberatung kompakt 211 (2026), Tabelle 5-4**.
 
-## 3–5-Minuten-Flow
+Verglichen werden drei direkt aus derselben Tabelle stammende Szenarien mit proportionalem Steuersatz von 1 % und 5 Mio. € Unternehmensfreibetrag:
 
-1. repräsentative Ground-Truth-Daten sehen
-2. Vermögensteuer, hohe Erbschaften, hohe Einkommen und Investitionsregel wählen
-3. 100 Budgetpunkte verteilen
-4. Ergebnis und Programm-Nähe ansehen
-5. Haushalts-/Zeit-Stresstest öffnen
-6. Politik-Briefing erzeugen
-7. Paket teilen und mit Freunden im Konsens-Lab vergleichen
+| Persönlicher Freibetrag | Steueraufkommen | DIW-Konfidenzintervall | Steuerpflichtige im Modell |
+|---|---:|---:|---:|
+| 1 Mio. € | 42,2 Mrd. € | 39,3–45,3 Mrd. € | ca. 1,322 Mio. |
+| 2 Mio. € | 34,7 Mrd. € | 32,4–37,1 Mrd. € | ca. 0,400 Mio. |
+| 5 Mio. € | 28,6 Mrd. € | 26,8–30,6 Mrd. € | ca. 0,117 Mio. |
+
+**Wichtig:** Das sind potenzielle Mikrosimulationswerte. Die DIW-Studie weist darauf hin, dass Anpassungsreaktionen der Steuerpflichtigen das reale Aufkommen verändern können. Der Auftraggeber der Studie wird im Lab transparent angezeigt.
+
+Das DIW-Lab bleibt absichtlich getrennt von Partei- und Konsensscores. Eine konkrete fiskalische Simulation ist nicht dasselbe wie eine politische Richtungsentscheidung.
 
 ## Partei-Match
 
-FairEint ordnet Nutzerentscheidungen und dokumentierte Parteipositionen auf derselben groben Skala ein. Der Prozentwert ist nur eine Ähnlichkeit innerhalb der enthaltenen Dimensionen:
+Der Score vergleicht Nutzerentscheidungen und dokumentierte Parteipositionen nur in den enthaltenen Dimensionen:
 
 - Vermögensteuer
 - Erbschaftsteuer
@@ -90,56 +77,54 @@ FairEint ordnet Nutzerentscheidungen und dokumentierte Parteipositionen auf ders
 - Klimaausgaben
 - Sicherheitsausgaben
 
-**Nicht vollständig enthalten:** Außenpolitik, Migration, Europa, Bürgerrechte und viele weitere wahlentscheidende Themen.
-
-Der Match ist deshalb **keine Wahlempfehlung**.
+Außenpolitik, Migration, Europa, Bürgerrechte und weitere wahlentscheidende Felder fehlen. Der Match ist deshalb **keine Wahlempfehlung**.
 
 ## Fiskalische Ehrlichkeit
 
-V5 monetarisiert derzeit nur den vereinfachten Vermögensteuer-Korridor aus der bisherigen DIW-orientierten Modellschicht.
+Der Haupt-Policy-Flow nutzt weiterhin einen bewusst vereinfachten Vermögensteuer-Korridor für die spielerische Gesamt-Experience. Die **exakten drei 1%-DIW-Szenarien** sind separat im DIW-Lab verfügbar, damit Quelle und Modellannahmen nicht mit dem politischen Richtungs-Score vermischt werden.
 
-Erbschaft- und Einkommensteuerentscheidungen werden nicht künstlich addiert, solange keine einheitlich geprüften Szenariotabellen integriert sind.
+Erbschaft- und Einkommensteuerentscheidungen werden nicht künstlich zu einem Gesamt-Eurobetrag addiert, solange keine einheitlich geprüften Szenariotabellen integriert sind.
 
 > Eine sichtbare Lücke ist besser als Scheingenauigkeit.
-
-Die vollständigen Formeln und Grenzen stehen in [`FAIREINT_5_METHOD.md`](FAIREINT_5_METHOD.md).
 
 ## Architektur
 
 ```text
 src/
-  FairEintV5.tsx          # aktuelle mobile-first Experience
-  FairEintV2.tsx          # vorherige Evidence-first Experience
+  FairEintV5.tsx          # V5 Policy- & Konsens-Experience
+  DiwWealthLab.tsx        # exakter 1%-Szenario-Explorer
+  FairEintV2.tsx          # vorherige V2
   data/
     v2.ts                 # Ground Truth, Budget, Partei-Positionen
-    v5.ts                 # Evidence Ledger, Haushalts-Archetypen, Bundestag
+    v5.ts                 # Evidence Ledger, Archetypen, Bundestag
+    diw2026.ts            # DIW Tabelle 5-4: drei 1%-Szenarien
   lib/
-    policyEngine.ts       # Partei-Match + Vermögensteuer-Korridor
+    policyEngine.ts       # Partei-Match + Haupt-Fiskalkorridor
     v5Engine.ts           # Impact, Zeit, Sharing und Konsens
-  App.tsx                 # ursprüngliche FairEint-Version
 ```
 
-### Versionszugang
+### Zugänge
 
 - Standard: **V5**
+- `?diw=1` — DIW 1%-Vermögensteuer-Lab
 - `?v2=1` — V2
 - `?legacy=1` — ursprüngliche FairEint-Version
 
 Alte V2-Paketparameter (`w`, `e`, `i`, `d`, `b`) bleiben lesbar. Neue Share-Links verwenden zusätzlich `view=result`, damit Empfänger direkt beim Ergebnis landen.
 
-## Noch nicht „wissenschaftlich fertig“
+## Noch nicht wissenschaftlich fertig
 
 Vor formellem wissenschaftlichen oder institutionellen Einsatz sollten insbesondere folgen:
 
 - unabhängiger Review der Partei-Scores
-- vollständige maschinenlesbare DIW-Szenariotabellen
+- weitere DIW-Tarifszenarien inklusive systematischer Verhaltensreaktionen integrieren
 - echte Haushalts-/Verteilungsmikrosimulation
 - strukturierte Bundestags-Abstimmungsdaten
 - Quellen-Snapshots und Versionierung
 - Accessibility-/Usability-Tests mit realen Bürger:innen
 - externer Review des Konsens-Index
 
-V5 ist damit ein **integrierter, politikfähiger Prototyp**, kein zertifiziertes Prognose- oder Wahlberatungssystem.
+V5 ist ein **integrierter, politikfähiger Prototyp**, kein zertifiziertes Prognose- oder Wahlberatungssystem.
 
 ## Lokal starten
 
@@ -148,13 +133,9 @@ npm install
 npm run dev
 ```
 
-Build:
-
 ```bash
 npm run build
 ```
-
-## Tech
 
 React · TypeScript · Vite · Tailwind CSS · Lucide
 
