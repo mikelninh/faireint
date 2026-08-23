@@ -3,11 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import FairEintV2 from './FairEintV2.tsx'
+import FairEintV5 from './FairEintV5.tsx'
 
-const showLegacy = new URLSearchParams(window.location.search).get('legacy') === '1'
+const params = new URLSearchParams(window.location.search)
+const showLegacy = params.get('legacy') === '1'
+const showV2 = params.get('v2') === '1'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {showLegacy ? <App /> : <FairEintV2 />}
+    {showLegacy ? <App /> : showV2 ? <FairEintV2 /> : <FairEintV5 />}
   </StrictMode>,
 )
